@@ -92,10 +92,29 @@
                               <p><b>Total Cost: </b> {{ $total->total_cost }} </p>
                               <p><b>Expected Premium: </b> {{ $show_budget_details->expected_premium }} </p> <hr>
 
-                                  <table class="table table-striped">
+<h4>Approvals:</h4>
+
+<div class="row">
+<div class="col-lg-4">
+<table class="table table-striped">
                                     <thead>
                                       <tr>
                                         <th>Category:</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody>
+                                       <tr><td>Reviewed by:</td></tr>
+                                       <tr><td>Recommended for budget by:</td></tr>
+                                       <tr><td>Recommended for activity by:</td></tr>
+                                       <tr><td>Approved by:</td></tr>
+                                   </tbody>
+                               </table>
+                           </div>
+
+                        <div class="col-lg-8">
+                                  <table class="table table-striped">
+                                    <thead>
+                                      <tr>
                                         <th>Name:</th>
                                         <th>Comment:</th>
                                         <th>Date:</th>
@@ -104,20 +123,22 @@
                                     <tbody>
                                       @foreach($show_reviewer as $reviewer)
                                       <tr>
-                                        <td>{{ $reviewer->category }}</td>
+                                        
                                         <td>
-                                        @if( $reviewer->approving_user_id != 0)
-                                        {{ $reviewer_name->name }}
-                                        @else
+                                        @if( $reviewer->approving_user_id == 0)
                                         Pending
+                                        @else
+                                        {{ $reviewer->name }}
                                         @endif
                                         </td>
                                         <td>{{ $reviewer->comment }}</td>
-                                        <td>{{ $reviewer->created_at }}</td>
+                                        <td>{{ $reviewer->updated_at }}</td>
                                       </tr>
                                       @endforeach
                                     </tbody>
                                   </table>
+                              </div>
+                          </div>
 
                                 <form class="form-horizontal" role="form" method="POST" action="/approve/329382329383293823983238{{ $show_budget_details->budget_id }}874393239328923982378923782739237/go">
                                      {{ csrf_field() }}

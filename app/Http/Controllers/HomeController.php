@@ -72,7 +72,7 @@ class HomeController extends Controller
             'category' => 'Reviewed by:',
             //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  Carbon::now(),
+            'updated_at'     =>  '',
         ));
 
     DB::table('approvals')->insert( array(
@@ -81,7 +81,7 @@ class HomeController extends Controller
             'category' => 'Recommended for budget by:',
             //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  Carbon::now(),
+            'updated_at'     =>  '',
         ));
 
     DB::table('approvals')->insert( array(
@@ -90,7 +90,7 @@ class HomeController extends Controller
             'category' => 'Recommended for activity by:',
             //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  Carbon::now(),
+            'updated_at'     =>  '',
         ));
 
     DB::table('approvals')->insert( array(
@@ -99,7 +99,7 @@ class HomeController extends Controller
             'category' => 'Approved by:',
             //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  Carbon::now(),
+            'updated_at'     =>  '',
         ));
 
 $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost');
@@ -125,16 +125,17 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         $reviewer_list_4 = DB::table('users')->where( 'title','=','DGM' )->get();
 
         $show_budget_details = DB::table('budget')->where('budget_id', $id )->first();
-        $show_reviewer = DB::table('approvals')->where('budget_id', $id )->get();
-        $show_reviewer2 = DB::table('approvals')->where('budget_id', $id )->first();
+        $show_reviewer = DB::table('approvals')->join('users', 'users.id', '=', 'approvals.approving_user_id')->where('budget_id', $id )->select('*')->get();
+
+
         $name = DB::table('users')->where('id', $show_budget_details->user_id )->first();
+       
         $branch = DB::table('branches')->where('branch_id', $name->branch_id_ )->first();
-        $reviewer_name = DB::table('users')->where('id', $show_reviewer2->approving_user_id )->first();
         $total = DB::table('balance')->where('budget_id', $id )->first();
 
 
 
-        return view('approve', compact('show_budget_details','show_reviewer','show_status','total','name','branch','reviewer_list_1', 'reviewer_list_2', 'reviewer_list_3','reviewer_list_4','reviewer_name'));
+        return view('approve', compact('show_budget_details','show_reviewer','show_status','total','name','branch','reviewer_list_1', 'reviewer_list_2', 'reviewer_list_3','reviewer_list_4'));
     }
 
     public function approve_post($id)
@@ -299,14 +300,14 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
     public function follow($id)
     {
         $show_budget_details = DB::table('budget')->where('budget_id', $id )->get();
-        $show_reviewer = DB::table('approvals')->where('budget_id', $id )->get();
-        $show_reviewer2 = DB::table('approvals')->where('budget_id', $id )->first();
+        
+        $show_reviewer = DB::table('approvals')->join('users', 'users.id', '=', 'approvals.approving_user_id')->where('budget_id', $id )->select('*')->get();
+       
         $show_status = DB::table('approvals')->where('budget_id', $id )->where('category','=','Approved by:')->where('status','=','Approved')->count();
         $total = DB::table('balance')->where('budget_id', $id )->first();
-        $reviewer_name = DB::table('users')->where('id', $show_reviewer2->approving_user_id )->first();
-
+     
         $branch = DB::table('branches')->where('branch_id', Auth::user()->branch_id_ )->first();
-        return view('follow', compact('show_budget_details','show_reviewer','show_status','total','reviewer_name','branch'));
+        return view('follow', compact('show_budget_details','show_reviewer','show_status','total','branch'));
     }
 
     public function edit_budget()

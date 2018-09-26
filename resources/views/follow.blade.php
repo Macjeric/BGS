@@ -22,6 +22,7 @@
 
                       <div align="right" class="col-md-6"><b>Edit details: </b><a href="{{ url('/requests/follow-up/id/edit') }}">Edit</a></div>
                       </div>
+
 @foreach($show_budget_details as $show)
                       
                       <table class="table table-responsive table-bordered table-hover table-striped">
@@ -33,7 +34,7 @@
                             <tr><td>Travelling Local Cost</td><td>{{ $show->travelling_cost }}</td></tr>
                             <tr><td>M/V Fuel & Lubricants Cost</td><td>{{ $show->fuel_cost }}</td></tr>
                             <tr><td>Postage Cost</td><td>{{ $show->postage_cost }}</td></tr>
-                            <tr><td>Fax Cost</td>{{ $show->fax_cost }}<td></td></tr>
+                            <tr><td>Fax Cost</td><td>{{ $show->fax_cost }}</td></tr>
                             <tr><td>Total Cost</td><td>{{ $total->total_cost }}</td></tr>
                             <tr><td>Expected Output Description:</td><td>{{ $show->description }}</td></tr>
                             <tr><td>Expected Premium</td><td>{{ $show->expected_premium }}</td></tr>
@@ -41,32 +42,54 @@
                       </table>  
 
 @endforeach
-             <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Category:</th>
-                    <th>Name:</th>
-                    <th>Comment:</th>
-                    <th>Date:</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($show_reviewer as $reviewer)
-                  <tr>
-                    <td>{{ $reviewer->category }}</td>
-                    <td>
-                    @if( $reviewer->approving_user_id != 0)
-                    {{ $reviewer_name->name }}
-                    @else
-                    Pending
-                    @endif
-                    </td>
-                    <td>{{ $reviewer->comment }}</td>
-                    <td>{{ $reviewer->created_at }}</td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
+
+<h4>Approvals:</h4>
+<div class="row">
+<div class="col-lg-4">
+<table class="table table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th>Category:</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody>
+                                       <tr><td>Reviewed by:</td></tr>
+                                       <tr><td>Recommended for budget by:</td></tr>
+                                       <tr><td>Recommended for activity by:</td></tr>
+                                       <tr><td>Approved by:</td></tr>
+                                   </tbody>
+                               </table>
+                           </div>
+
+                        <div class="col-lg-8">
+                                  <table class="table table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th>Name:</th>
+                                        <th>Comment:</th>
+                                        <th>Date:</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      @foreach($show_reviewer as $reviewer)
+                                      <tr>
+                                        <td>
+                                        @if( $reviewer->approving_user_id == 0)
+                                         Pending
+                                        @else
+                                        {{ $reviewer->name }}
+                                        @endif
+                                        </td>
+                                        <td>{{ $reviewer->comment }}</td>
+                                        <td>{{ $reviewer->updated_at }}</td>
+                                      </tr>
+                                      @endforeach
+                                    </tbody>
+                                  </table>
+                              </div>
+                          </div>
+
+
 <hr>
  @if( $show_status<1 )
             <p><b>Implementation status of Activities:</b></p>

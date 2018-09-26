@@ -30,6 +30,7 @@ class AdminController extends Controller
  	DB::table('users')->insert(
         array(
             'name' => Input::get('name'),
+            'username' => Input::get('username'),
             'email' => Input::get('email'),
             'title' => Input::get('title'),
             'branch_id_' => Input::get('branch_name'),

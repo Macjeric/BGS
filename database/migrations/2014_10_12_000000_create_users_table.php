@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id')->unsigned()->index();
             $table->string('name')->unique();
             $table->string('email')->unique();
+            $table->string('username')->unique();
             $table->string('title');
 $table->integer('branch_id_')->unsigned()->index()->references('branch_id')->on('branches')->onUpdate('cascade')->onDelete('restrict');
             $table->string('status')->default('created');
