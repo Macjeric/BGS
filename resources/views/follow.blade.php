@@ -6,27 +6,34 @@
     <div class="row">
    
             <div class="panel panel-primary">
-                <div class="panel-heading"><b>Follow up: </b>Budget Request Details for the month XXXX:</div>
+                <div class="panel-heading"><b>Follow up: </b>Budget Request Details</div>
 
                 <div class="panel-body">
-                      <div class="row">
 
-                      <div class="col-md-6"><b>Business Status: </b>Not settled
-@if( $show_status<1 )
-        <a href="#" class="disabled">Settle Business</a>
-@else
-        <a href="{{ url('/requests/follow-up/id/settle') }}">Settle Business</a>
-@endif
-                       </div>
-    
 
-                      <div align="right" class="col-md-6"><b>Edit details: </b><a href="{{ url('/requests/follow-up/id/edit') }}">Edit</a></div>
-                      </div>
+                              @if (session('success'))
+                             <div class="alert alert-success alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('success') }}
+                             </div>
+                             @elseif (session('failure'))
+                             <div class="alert alert-danger alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('failure') }}
+                             </div>
+                             @elseif (session('warning'))
+                             <div class="alert alert-warning alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('warning') }}
+                             </div>
+                             @endif
 
-@foreach($show_budget_details as $show)
+           
                       
                       <table class="table table-responsive table-bordered table-hover table-striped">
                             <th colspan="2" style="text-align: center;">Budget Details</th>
+
+@foreach($show_budget_details as $show)                          
                             <tr><td>Name:</td><td>{{ Auth::user()->name }}</td></tr>
                             <tr><td>Title</td><td>{{ Auth::user()->title }} - {{ $branch->b_name }} -- {{ $branch->b_region }} -- {{ $branch->b_zone }}</td></tr>
                             <tr><td>Month</td><td>{{ $show->month }}</td></tr>
@@ -35,13 +42,28 @@
                             <tr><td>M/V Fuel & Lubricants Cost</td><td>{{ $show->fuel_cost }}</td></tr>
                             <tr><td>Postage Cost</td><td>{{ $show->postage_cost }}</td></tr>
                             <tr><td>Fax Cost</td><td>{{ $show->fax_cost }}</td></tr>
-                            <tr><td>Total Cost</td><td>{{ $total->total_cost }}</td></tr>
                             <tr><td>Expected Output Description:</td><td>{{ $show->description }}</td></tr>
                             <tr><td>Expected Premium</td><td>{{ $show->expected_premium }}</td></tr>
-           
+ @endforeach          
+
+                            <tr><td>Total Cost</td><td>{{ $show->market_cost+$show->travelling_cost+$show->fuel_cost+$show->postage_cost+$show->fax_cost }}</td></tr>  
+@if( $show->business_status == 'Not settled' && $show->budget_status=='Approved' && $remarks_details>'1')
+                            <tr><td>Settle Business</td><td><a href="/requests/follow-up/32789{{ $total->budget_id }}43789721/settle" class="btn btn-primary btn-block">Settle Business</a></td></tr>
+@else
+                            <tr><td>Settle Business</td><td><a href="#" class="btn btn-primary btn-block disabled">Settle Business</a></td></tr>
+@endif
+
+@if( $show->business_status == 'Not settled' && $show->budget_status=='created' || $show->budget_status=='created *')
+                            <tr><td>Edit:</td><td><a href="/requests/follow-up/32789{{ $show->budget_id }}43789721/edit" class="btn btn-warning btn-block">Edit Details</a></td></tr>
+@else
+                            <tr><td>Edit:</td><td><a href="#" class="btn btn-warning btn-block disabled">Edit Details</a></td></tr>
+@endif
+
+
+
                       </table>  
 
-@endforeach
+
 
 <h4>Approvals:</h4>
 <div class="row">
@@ -125,11 +147,39 @@
                             </div>
                         </div>
                     </form>
-@else
- 
+
+@elseif( $remarks_details>'1' )
 
             <p><b>Implementation status of Activities:</b></p>
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('/requests/follow-up/remarks') }}">
+            <form class="form-horizontal" action="#">
+                         <div class="form-group">
+                            <label class="col-md-2 control-label">Remarks:</label>
+                            <div class="col-md-10">
+                                <textarea id="name" class="form-control" name="remarks" disabled>{{ $remarks_details->remarks }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Actual Cost</label>
+
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="actual_cost" value="{{ $remarks_details->actual_cost }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Expected Action Date:</label>
+
+                            <div class="col-md-10">
+                                <input class="form-control" name="action_date" value="{{ $remarks_details->expected_action_date }}" disabled/>
+                            </div>
+                        </div>
+                    </form>
+
+@else
+ 
+            <p><b>Implementation status of Activities:</b></p>
+                <form class="form-horizontal" role="form" method="POST" action="/requests/follow-up/32789{{ $total->budget_id }}43789721/remarks/post">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('remarks') ? ' has-error' : '' }}">
@@ -150,7 +200,7 @@
                             <label for="actual_cost" class="col-md-2 control-label">Actual Cost</label>
 
                             <div class="col-md-10">
-                                <input id="actual_cost" type="text" class="form-control" name="actual_cost" pattern="[0-9]{*}" required>
+                                <input id="actual_cost" type="text" class="form-control" name="actual_cost" required>
 
                                 @if ($errors->has('actual_cost'))
                                     <span class="help-block">

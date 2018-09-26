@@ -24,13 +24,17 @@ Route::get('/requests', 'HomeController@requests');
 Route::get('/report', 'HomeController@reports');
 Route::get('/requests/follow-up/32789{id}43789721', 'HomeController@follow');
 Route::get('/requests/follow-up/32789{id}43789721/edit', 'HomeController@edit_budget');
+Route::post('/requests/follow-up/32789{id}43789721/edit/post', 'HomeController@update_budget');
 Route::get('/requests/follow-up/32789{id}43789721/settle', 'HomeController@settle');
 Route::post('/requests/follow-up/32789{id}43789721/settle/post', 'HomeController@settle_post');
+Route::post('/requests/follow-up/32789{id}43789721/remarks/post', 'HomeController@remarks_post');
 
 Route::get('/approve/329382329383293823983238{id}874393239328923982378923782739237', 'HomeController@approve');
 Route::post('/approve/329382329383293823983238{id}874393239328923982378923782739237/go', 'HomeController@approve_post');
 Route::post('/approve/329382329383293823983238{id}874393239328923982378923782739237/reject', 'HomeController@reject_post');
 Route::post('/approve/329382329383293823983238{id}874393239328923982378923782739237/return', 'HomeController@return_post');
+
+
 Route::get('/approved/',function () {
     return view('approved');
 });

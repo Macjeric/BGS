@@ -23,6 +23,7 @@ class CreateRemarksTable extends Migration
             $table->string('final_remarks')->nullable();
             $table->string('reason')->nullable();
             $table->string('reviewer')->nullable();
+            $table->string('status')->default('Remark Submited');
             $table->timestamps();
             });
 

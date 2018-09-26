@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use App\User;
 use App\Models\ApprovalsModel;
 use App\Models\BudgetModel;
+use App\Models\RemarksModel;
+use App\Models\BalanceModel;
 use Illuminate\Support\Facades\Input;
 
 class HomeController extends Controller
@@ -70,39 +72,36 @@ class HomeController extends Controller
 
             'budget_id' => $created_id,
             'category' => 'Reviewed by:',
-            //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  '',
+            'updated_at'     =>  NULL,
         ));
 
     DB::table('approvals')->insert( array(
 
             'budget_id' => $created_id,
             'category' => 'Recommended for budget by:',
-            //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  '',
+            'updated_at'     =>  NULL,
         ));
 
     DB::table('approvals')->insert( array(
 
             'budget_id' => $created_id,
             'category' => 'Recommended for activity by:',
-            //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  '',
+            'updated_at'     =>  NULL,
         ));
 
     DB::table('approvals')->insert( array(
 
             'budget_id' => $created_id,
             'category' => 'Approved by:',
-            //'link_id' => Hash::make($created_id),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  '',
+            'updated_at'     =>  NULL,
         ));
 
 $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost');
+
     DB::table('balance')->insert( array(
 
             'budget_id' => $created_id,
@@ -305,14 +304,56 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
        
         $show_status = DB::table('approvals')->where('budget_id', $id )->where('category','=','Approved by:')->where('status','=','Approved')->count();
         $total = DB::table('balance')->where('budget_id', $id )->first();
+
+        $remarks_details = DB::table('remarks')->where('budget_id', $id )->first();
+        $remarks_details_count = DB::table('remarks')->where('budget_id', $id )->count();
+
+        $budget_id = $id;
      
         $branch = DB::table('branches')->where('branch_id', Auth::user()->branch_id_ )->first();
-        return view('follow', compact('show_budget_details','show_reviewer','show_status','total','branch'));
+        return view('follow', compact('show_budget_details','show_reviewer','show_status','total','branch','budget_id','remarks_details','remarks_details_count'));
     }
 
-    public function edit_budget()
+    public function edit_budget($id)
     {
-        return view('edit_budget');
+        $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
+        $budget_details = DB::table('budget')->where('budget_id', $id )->first();
+
+        return view('edit_budget', compact('budget_details','branch_details'));
+    }
+
+    public function remarks_post(Request $request, $id)
+    {
+          $this->validate($request, [
+            'remarks' => 'required|max:255',
+            'action_date' => 'required|max:255',
+            'actual_cost' => 'required|numeric',
+
+         ]);
+
+ DB::table('remarks')->insert( array(
+
+            'budget_id' =>  $id,
+            'actual_cost' => Input::get('actual_cost'),
+            'expected_action_date' => Input::get('action_date'),
+            'remarks' => Input::get('remarks'),
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),
+        ));
+
+/*
+        $Remark = new RemarksModel;
+
+        $Remark->budget_id = $id;
+        $Remark->actual_cost = Input::get('actual_cost');
+        $Remark->expected_action_date = Input::get('action_date');
+        $Remark->remarks = Input::get('remark');
+        $Remark->save();
+
+        */
+
+        return redirect()->back()->with('success','Congratulations! Remark Submitted Successfully!');
+
     }
 
     public function settle()
@@ -325,4 +366,34 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         //return view('settle');
     }
 
+    public function update_budget($id)
+    {
+
+
+        $budget = BudgetModel::where('budget_id',$id)->first();
+        $budget->month = Input::get('month');
+        $budget->market_cost = Input::get('market_cost');
+        $budget->travelling_cost = Input::get('travelling_cost');
+        $budget->fuel_cost = Input::get('fuel_cost');
+        $budget->postage_cost = Input::get('postage_cost');
+        $budget->fax_cost = Input::get('fax_cost');
+        $budget->description =Input::get('output_description');
+        $budget->expected_premium = Input::get('expected_premium');
+        $budget->budget_status = 'created *';
+        $budget->save();
+
+    $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost');
+
+        $balance = BalanceModel::where('budget_id',$id)->first();
+        $balance->total_cost = $total;
+        $balance->save();
+
+    return redirect('requests')->with('success','Request Updated Successfully!');
+
+    }
+
+
+
+
 }
+
