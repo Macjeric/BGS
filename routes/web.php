@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/add', 'HomeController@add');
+Route::resource('admin', 'AdminController');
 Route::post('/add/post', 'HomeController@add_post');
 Route::get('/requests', 'HomeController@requests');
 Route::get('/report', 'HomeController@reports');

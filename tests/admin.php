@@ -61,7 +61,7 @@ class AdminController extends Controller
             'name' => 'required',
             'email' => 'required',
             'title' => 'required',
-            'branch_id_' => 'required',
+            'branch_id' => 'required',
             'password' => 'required',
             ]);
 
@@ -72,7 +72,7 @@ class AdminController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'title' => $data['title'],
-            'branch_id_' => $data['branch_id_'],
+            'branch_id' => $data['branch_id'],
 
             ]);
 
@@ -100,7 +100,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         //
-        $admin = admin::find($id);
+        $admin = Admin::find($id);
         return view('admin.edit')->with('admin', $admin);
     }
 
@@ -117,24 +117,20 @@ class AdminController extends Controller
         {
         //Validate goods_received forms
         $this->validate($request, [
-            'id' => 'required',
             'name' => 'required',
             'email' => 'required',
-            'title' => 'required',
-            'branch_id_' => 'required',
             'password' => 'required',
+            'department' => 'required',
             ]);
 
-            // creation
-            $admin = admin::find($id);
+            //goods received creation
+            $admin = Admin::find($id);
             $admin->name = $request->input('name');
             $admin->email = $request->input('email');
             $admin->password = $request->input('password');
-            $admin->title = $request->input('title');
-            $admin->branch_id_ = $request->input('branch_id_');
+            $admin->department = $request->input('department');
 
-
-            $admin->save();
+            $receive->save();
         }
     }
 
@@ -149,7 +145,7 @@ class AdminController extends Controller
         //
         $admin = Admin::find($id);
         $admin->delete();
-        return redirect('/admin')->with('success', 'User Removed');
+        return redirect('/Admin')->with('success', 'User Removed');
     }
 }
 
