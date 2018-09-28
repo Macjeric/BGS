@@ -34,8 +34,16 @@ class HomeController extends Controller
     public function index()
     {
 
-        $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->count();
-if($balance<1)
+        $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->count();
+
+        $balance = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->first();
+
+
+        if($balance1<1){
+        $balance = new BalanceModel;
+        $balance->resultant_balance = '0';
+         return view('home', compact('balance'));
+        }
 
 
         return view('home', compact('balance'));
@@ -44,21 +52,25 @@ if($balance<1)
     public function add()
     {
 
-        $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->count();
-    if($balance<1)
+        $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->count();
+
+        $balance = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->first();
+
 
         $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
         $reviewer_list = DB::table('users')->where( 'title','=','HFA' )->orWhere('title','=','PFA')->get();
+
+       if($balance1<1){
+        $balance = new BalanceModel;
+        $balance->resultant_balance = '0';
+          return view('add', compact('branch_details','reviewer_list','balance'));
+        }
 
         return view('add', compact('branch_details','reviewer_list','balance'));
     }
 
     public function add_post()
     {
-
-    $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->count();
-if($balance<1)
-
 
     DB::table('budget')->insert( array(
 
@@ -123,8 +135,7 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
             'updated_at'     =>  Carbon::now(),
         ));
 
-
-
+ 
     return redirect('/requests')->with('success', 'Budget Submitted Successfully!');
 
     }
