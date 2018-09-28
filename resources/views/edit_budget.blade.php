@@ -155,7 +155,7 @@
                             <label for="output_description" class="col-md-4 control-label">Expected output Description:</label>
 
                             <div class="col-md-6">
-                                <textarea id="output_description" class="form-control" name="output_description" value="{{ $budget_details->description }}" required></textarea>
+                                <textarea id="output_description" class="form-control" name="output_description" required>{{ $budget_details->description }}</textarea>
 
                                 @if ($errors->has('output_description'))
                                     <span class="help-block">

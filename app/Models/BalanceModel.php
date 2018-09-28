@@ -8,6 +8,8 @@ class BalanceModel extends Model
 {
   protected $table = 'balance';
 
+  protected $primaryKey = 'balance_id';
+
   protected $fillable =[
         'budget_id', 
         'total_cost', 

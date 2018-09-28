@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RemarksModel extends Model
 {
+    protected $table = 'remarks';
 
   protected $fillable =[
     	'budget_id',

@@ -6,9 +6,9 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Add Request:</div>
+                <div class="panel-heading"><b>Add Request:</b></div>
                 <div class="panel-body">
-                    
+                    <p align="right"><b>Account Balance:</b> {{ $balance->resultant_balance }} TZS</p>
 
                     <form class="form-horizontal" role="form" id="inst_form" method="POST" action="{{ url('/add/post') }}">
                         {{ csrf_field() }}
