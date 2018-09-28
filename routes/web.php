@@ -16,18 +16,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/', function () {
-//     //Fetch amount
-//     $amount = graph::where('created_at', '>=', Carbon::now()->fistOfYear())
-//             ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
-//             ->groupBy('month')
-//             ->pluck('market_cost');
+Route::get('/graph', function () {
+    //Fetch amount
+    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
+            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
+            ->groupBy('month')
+            ->pluck('market_cost', 'month');
 
-//             dd($amount);
-
-//     //Load the page and pass the data
-//     return view('graph', compact('amount'));
-// });
+    //Load the page and pass the data
+    return view('graph', compact('amount'));
+});
 
 Auth::routes();
 
