@@ -70,7 +70,7 @@
                             <label for="market_cost" class="col-md-4 control-label">Market Cost</label>
 
                             <div class="col-md-6">
-                                <input id="market_cost" type="text" class="inst_amount form-control" name="market_cost" pattern="[0-9]{*}" required|integer|between:1,10>
+                                <input id="market_cost" type="text" class="inst_amount form-control" name="market_cost" pattern="[0-9]{*}" required>
 
                                 @if ($errors->has('market_cost'))
                                     <span class="help-block">
