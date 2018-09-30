@@ -29322,7 +29322,7 @@ var _chart2 = _interopRequireDefault(_chart);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _vue2.default.extend({
-    template: '\n        <div>\n            <canvas width="200" height="100" v-el:canvas></canvas>\n            {{{ legend }}} \n        </div>\n    ',
+    template: '\n        <div>\n            <canvas width="40px" height="20px" v-el:canvas></canvas>\n            {{{ legend }}} \n        </div>\n    ',
 
     props: ['keys', 'values'],
 

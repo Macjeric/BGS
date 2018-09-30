@@ -4,7 +4,7 @@ import Chart from 'chart.js';
 export default Vue.extend({
     template: `
         <div>
-            <canvas width="200" height="100" v-el:canvas></canvas>
+            <canvas width="40px" height="20px" v-el:canvas></canvas>
             {{{ legend }}} 
         </div>
     `,

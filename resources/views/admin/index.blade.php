@@ -2,8 +2,8 @@
 
 @section('content')
 
-<a href="/register" class="btn btn-default">Create User</a>
-<h1>Admins Page</h1>
+<a href="/register" class="btn btn-success">Create User</a>
+<h1>Users</h1>
 
 <table class="table">
     <tr>
@@ -20,7 +20,7 @@
     @foreach($admins as $admin)
     <tr>
     <td>{!!$admin-> id!!}</td>
-    <td>{!!$admin-> name!!}</td>
+    <td>{!!$admin-> username!!}</td>
     <td>{!!$admin-> email!!}</td>
     <td>{!!$admin-> title!!}</td>
     <td>{!!$admin-> branch_id_!!}</td>

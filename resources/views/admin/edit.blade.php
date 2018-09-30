@@ -11,12 +11,12 @@
         {{Form::text('id', $admin->id, ['class' => 'form-control', 'placeholder' => 'Enter the ID'])}}
     </div>
     <div class="form-group">
-            {{Form::label('name', 'Name')}}
-            {{Form::text('name', $admin->name, ['class' => 'form-control', 'placeholder' => 'Enter the  Name'])}}
+            {{Form::label('username', 'Name')}}
+            {{Form::text('username', $admin->name, ['class' => 'form-control', 'placeholder' => 'Enter the  Name'])}}
         </div>
         <div class="form-group">
                 {{Form::label('title', 'Title')}}
-                {{Form::text('department', $admin->department, ['class' => 'form-control', 'placeholder' => 'Enter the Department'])}}
+                {{Form::text('title', $admin->title, ['class' => 'form-control', 'placeholder' => 'Enter the Department'])}}
             </div>
         
          <div class="form-group">

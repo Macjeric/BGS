@@ -7,20 +7,31 @@
 
 {!! Form::open(['action' => 'AdminsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
     
+<div class="form-group">
+            {{Form::label('id', 'ID')}}
+            {{Form::password('id', '', ['class' => 'form-control', 'placeholder' => 'Enter the Quantity'])}}
+                 </div>
+
+
     <div class="form-group">
-            {{Form::label('name', 'Name')}}
-            {{Form::text('name', '', ['class' => 'form-control', 'placeholder' => 'Enter the  Name'])}}
+            {{Form::label('username', 'Name')}}
+            {{Form::text('username', '', ['class' => 'form-control', 'placeholder' => 'Enter the  Name'])}}
         </div>
 
         <div class="form-group">
-            {{Form::label('password', 'Password')}}
-            {{Form::password('password', '', ['class' => 'form-control', 'placeholder' => 'Enter the Quantity'])}}
+            {{Form::label('title', 'Title')}}
+            {{Form::password('title', '', ['class' => 'form-control', 'placeholder' => 'Enter the Quantity'])}}
                  </div>
 
                  
         <div class="form-group">
-                {{Form::label('department', 'Department')}}
-                {{Form::text('department', '', ['class' => 'form-control', 'placeholder' => 'Enter the Department'])}}
+                {{Form::label('email', 'Email')}}
+                {{Form::text('email', '', ['class' => 'form-control', 'placeholder' => 'Enter the Department'])}}
+            </div>
+
+            <div class="form-group">
+                {{Form::label('branch_id_', 'Branch ID')}}
+                {{Form::text('branch_id_', '', ['class' => 'form-control', 'placeholder' => 'Enter the Department'])}}
             </div>
         
          <div class="form-group">
