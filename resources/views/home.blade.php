@@ -10,8 +10,13 @@
 
                 <div class="panel-body">
                    <b>Account Balance:</b> {{ $balance->resultant_balance }} TZS
+                   <br><br>
+                   <p align="center"> <b>Budget Total Cost to Total Amount in Current Quarter</b></p>
+            <graph :keys="{{ $amount->keys() }}"  :values="{{ $amount->values() }}"></graph>
+
+    		<script src ="/js/main.js"> </script>
         </div>
     </div>
 </div>
-
+ 
 @endsection

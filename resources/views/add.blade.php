@@ -5,6 +5,25 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+
+
+                              @if (session('success'))
+                             <div class="alert alert-success alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('success') }}
+                             </div>
+                             @elseif (session('failure'))
+                             <div class="alert alert-danger alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('failure') }}
+                             </div>
+                             @elseif (session('warning'))
+                             <div class="alert alert-warning alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('warning') }}
+                             </div>
+                             @endif
+
             <div class="panel panel-default">
                 <div class="panel-heading"><b>Add Request:</b></div>
                 <div class="panel-body">
@@ -70,7 +89,7 @@
                             <label for="market_cost" class="col-md-4 control-label">Market Cost</label>
 
                             <div class="col-md-6">
-                                <input id="market_cost" type="text" class="inst_amount form-control" name="market_cost" pattern="[0-9]{*}" required>
+                                <input placeholder="Maximum limit {{ $limits->market_cost }}" id="market_cost" type="text" class="inst_amount form-control" name="market_cost" pattern="[0-9]{*}" required>
 
                                 @if ($errors->has('market_cost'))
                                     <span class="help-block">
@@ -84,7 +103,7 @@
                             <label for="travelling_cost" class="col-md-4 control-label">Travelling Local Cost</label>
 
                             <div class="col-md-6">
-                                <input id="travelling_cost" type="text" class="inst_amount form-control" name="travelling_cost" pattern="[0-9]{*}" required>
+                                <input placeholder="Maximum limit {{ $limits->travelling_cost }}" id="travelling_cost" type="text" class="inst_amount form-control" name="travelling_cost" pattern="[0-9]{*}" required>
 
                                 @if ($errors->has('travelling_cost'))
                                     <span class="help-block">
@@ -98,7 +117,7 @@
                             <label for="fuel_cost" class="col-md-4 control-label">M/V Fuel & Lubricants Cost</label>
 
                             <div class="col-md-6">
-                                <input id="fuel_cost" type="text" class="inst_amount form-control" name="fuel_cost" pattern="[0-9]{*}" required>
+                                <input placeholder="Maximum limit {{ $limits->fuel_cost }}" id="fuel_cost" type="text" class="inst_amount form-control" name="fuel_cost" pattern="[0-9]{*}" required>
 
                                 @if ($errors->has('fuel_cost'))
                                     <span class="help-block">
@@ -112,7 +131,7 @@
                             <label for="postage_cost" class="col-md-4 control-label">Postage Cost</label>
 
                             <div class="col-md-6">
-                                <input id="postage_cost" type="text" class="inst_amount form-control" name="postage_cost" pattern="[0-9]{*}" required>
+                                <input placeholder="Maximum limit {{ $limits->postage_cost }}" id="postage_cost" type="text" class="inst_amount form-control" name="postage_cost" pattern="[0-9]{*}" required>
 
                                 @if ($errors->has('postage_cost'))
                                     <span class="help-block">
@@ -126,7 +145,7 @@
                             <label for="fax_cost" class="col-md-4 control-label">Fax Cost</label>
 
                             <div class="col-md-6">
-                                <input id="fax_cost" type="text" class="inst_amount form-control" name="fax_cost" pattern="[0-9]{*}" required>
+                                <input placeholder="Maximum limit {{ $limits->fax_cost }}" id="fax_cost" type="text" class="inst_amount form-control" name="fax_cost" pattern="[0-9]{*}" required>
 
                                 @if ($errors->has('fax_cost'))
                                     <span class="help-block">

@@ -1,5 +1,6 @@
 <?php
-
+use App\graph;
+use Carbon\Carbon; 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,6 +29,7 @@ Route::post('/requests/follow-up/32789{id}43789721/edit/post', 'HomeController@u
 Route::get('/requests/follow-up/32789{id}43789721/settle', 'HomeController@settle');
 Route::post('/requests/follow-up/32789{id}43789721/settle/post', 'HomeController@settle_post');
 Route::post('/requests/follow-up/32789{id}43789721/remarks/post', 'HomeController@remarks_post');
+Route::post('/requests/follow-up/32789{id}43789721/push/post', 'HomeController@forward_post');
 
 Route::get('/approve/329382329383293823983238{id}874393239328923982378923782739237', 'HomeController@approve');
 Route::post('/approve/329382329383293823983238{id}874393239328923982378923782739237/go', 'HomeController@approve_post');
@@ -42,4 +44,35 @@ Route::get('/approved/',function () {
 //Admin
 Route::post('/create-user-post', 'AdminController@add_user');
 
-Route::get('/register-user', 'AdminController@create_user');
+Route::get('/admin/register-user', 'AdminController@create_user');
+
+Route::resource('admin/users', 'AdminController');
+Route::resource('/admin/limits', 'LimitsController');
+Route::get('/admin/reports', 'AdminController@reports');
+
+
+
+
+
+/*Route::get('/graph', function () {
+    //Fetch amount
+    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
+            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
+            ->groupBy('month')
+            ->pluck('market_cost', 'month');
+
+    //Load the page and pass the data
+    return view('graph', compact('amount'));
+}); */
+
+
+Route::get('/admin', function () {
+    //Fetch amount
+    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
+            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
+            ->groupBy('month')
+            ->pluck('market_cost', 'month');
+
+    //Load the page and pass the data
+    return view('dash', compact('amount'));
+});

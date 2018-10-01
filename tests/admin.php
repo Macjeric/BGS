@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 use DB;
-//use Auth; 
+//use Auth;
 use Hash;
 use App\User;
 use Illuminate\Support\Facades\Input;
@@ -21,6 +21,8 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
+   
+      
 
     public function index()
     {
@@ -30,17 +32,27 @@ class AdminController extends Controller
         
         
     }
-   
-     public function create()
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
         //To show the required create page when its clicked
         return view('admin.create');
         
         
-    }     
+    }
 
-
- public function store(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         //
         //Validate goods_received forms
@@ -49,18 +61,18 @@ class AdminController extends Controller
             'name' => 'required',
             'email' => 'required',
             'title' => 'required',
-            'branch_id_' => 'required',
+            'branch_id' => 'required',
             'password' => 'required',
             ]);
 
 
         //creation
-        return admin::create([
+        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'title' => $data['title'],
-            'branch_id_' => $data['branch_id_'],
+            'branch_id' => $data['branch_id'],
 
             ]);
 
@@ -68,75 +80,72 @@ class AdminController extends Controller
             
     }
 
-
-
-
-       public function add_user(Request $request)
-    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
-
-
- 	DB::table('users')->insert(
-        array(
-            'name' => Input::get('name'),
-            'username' => Input::get('username'),
-            'email' => Input::get('email'),
-            'title' => Input::get('title'),
-            'branch_id_' => Input::get('branch_name'),
-            'status' => 'created',
-            'password' => Hash::make($request['password']),
-            'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  Carbon::now()
-        ));
-        
-        return redirect('/')->with('success', 'User has been Registered Successfully!');
-
+        //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
         //
-        $admin =  admin::find($id);
+        $admin = Admin::find($id);
         return view('admin.edit')->with('admin', $admin);
     }
 
-  	public function create_user()
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
-    	$list_branches = DB::table('branches')->get();
-
-    	return view('auth.register',compact('list_branches'));
-    }
-
-public function update(Request $request, $id)
-    {
+        //public function update(Request $request, $id)
+        {
+        //Validate goods_received forms
         $this->validate($request, [
-            'id' => 'required',
             'name' => 'required',
             'email' => 'required',
-            'title' => 'required',
-            'branch_id_' => 'required',
             'password' => 'required',
+            'department' => 'required',
             ]);
 
-            // creation
-            $admin = admin::find($id);
+            //goods received creation
+            $admin = Admin::find($id);
             $admin->name = $request->input('name');
             $admin->email = $request->input('email');
             $admin->password = $request->input('password');
-            $admin->title = $request->input('title');
-            $admin->branch_id_ = $request->input('branch_id_');
+            $admin->department = $request->input('department');
 
-
-            $admin->save();
-        
+            $receive->save();
+        }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
         //
         $admin = Admin::find($id);
         $admin->delete();
-        return redirect('/admin')->with('success', 'User Removed');
+        return redirect('/Admin')->with('success', 'User Removed');
     }
-
 }
+

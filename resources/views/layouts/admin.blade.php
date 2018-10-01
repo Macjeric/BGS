@@ -57,13 +57,13 @@
 
                                         @else
 
-                                          <li><a href="/home")">Dashboard</a></li>
-                                          <li><a href="/add" >Add Request</a></li>
-                                          <li><a href="/requests">My Requests</a></li>
-                                          <li><a href="/report" >Reports</a></li>
+                                          <li><a href="/admin">Dashboard</a></li>
+                                          <li><a href="/admin/budget-requests">Budget requests</a></li>
+                                          <li><a href="/admin/users">Users</a></li>
+                                          <li><a href="/admin/limits">Amount Limits</a></li>
+                                          <li><a href="/admin/reports" >Reports</a></li>
 
                                         <li>
-
                                             <a href="#"><i>Logged in as
                                                 {{ Auth::user()->name }}
                                             </i></a>
@@ -84,7 +84,7 @@
 
                                 </ul>
                             </li>
-                        @endif
+                        @endif 
                         
                     </ul>
                 </div>

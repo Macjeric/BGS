@@ -13,6 +13,7 @@ class BudgetModel extends Model
   protected $fillable =[
     	'user_id',
         'month', 
+        'quarter', 
         'market_cost', 
         'travelling_cost', 
         'fuel_cost', 

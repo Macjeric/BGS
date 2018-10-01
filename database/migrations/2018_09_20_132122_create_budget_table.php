@@ -17,6 +17,7 @@ class CreateBudgetTable extends Migration
             $table->increments('budget_id')->unsigned()->index();
             $table->integer('user_id')->unsigned()->index()->references('id')->on('users')->onUpdate('cascade')->onDelete('restrict');
             $table->string('month');
+            $table->integer('quarter');
             $table->integer('market_cost');
             $table->integer('travelling_cost');
             $table->integer('fuel_cost');

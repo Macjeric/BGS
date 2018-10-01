@@ -49,6 +49,8 @@
                             <tr><td>Total Cost</td><td>{{ $show->market_cost+$show->travelling_cost+$show->fuel_cost+$show->postage_cost+$show->fax_cost }}</td></tr>  
 @if( $show->business_status == 'Not settled' && $show->budget_status=='Approved' && $remarks_details>'1')
                             <tr><td>Settle Business</td><td><a href="/requests/follow-up/32789{{ $total->budget_id }}43789721/settle" class="btn btn-primary btn-block">Settle Business</a></td></tr>
+@elseif( $show->business_status == 'Pushed Forward' && $show->budget_status=='Approved' && $remarks_details>'1')
+                            <tr><td>Settle Business</td><td><a href="/requests/follow-up/32789{{ $total->budget_id }}43789721/settle" class="btn btn-primary btn-block">Settle Business</a></td></tr>
 @else
                             <tr><td>Settle Business</td><td><a href="#" class="btn btn-primary btn-block disabled">Settle Business</a></td></tr>
 @endif

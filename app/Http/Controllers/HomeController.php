@@ -10,8 +10,9 @@ use Carbon\Carbon;
 use App\User;
 use App\Models\ApprovalsModel;
 use App\Models\BudgetModel;
-use App\Models\RemarksModel;
+use App\Models\RemarksModel; 
 use App\Models\BalanceModel;
+use App\graph;
 use Illuminate\Support\Facades\Input;
 
 class HomeController extends Controller
@@ -34,6 +35,12 @@ class HomeController extends Controller
     public function index()
     {
 
+        $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
+                    ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
+                    ->groupBy('month')
+                    ->pluck('market_cost', 'month');
+
+
         $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->count();
 
         $balance = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->first();
@@ -42,15 +49,16 @@ class HomeController extends Controller
         if($balance1<1){
         $balance = new BalanceModel;
         $balance->resultant_balance = '0';
-         return view('home', compact('balance'));
+         return view('home', compact('balance','amount'));
         }
 
 
-        return view('home', compact('balance'));
+        return view('home', compact('balance','amount'));
     }
 
     public function add()
     {
+        $limits = DB::table('limits')->first();
 
         $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->count();
 
@@ -63,18 +71,51 @@ class HomeController extends Controller
        if($balance1<1){
         $balance = new BalanceModel;
         $balance->resultant_balance = '0';
-          return view('add', compact('branch_details','reviewer_list','balance'));
+          return view('add', compact('branch_details','reviewer_list','balance','limits'));
         }
 
-        return view('add', compact('branch_details','reviewer_list','balance'));
+        return view('add', compact('branch_details','reviewer_list','balance','limits'));
     }
 
     public function add_post()
     {
 
+    $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
+
+    $limits = DB::table('limits')->first();
+
+    if(Input::get('market_cost')>$limits->market_cost){
+
+        return redirect()->back()->with('failure','Sorry the market cost exceeds the limit of '.$limits->market_cost);
+    }
+
+    if(Input::get('travelling_cost')>$limits->travelling_cost){
+
+        return redirect()->back()->with('failure','Sorry the Travelling cost exceeds the limit of '.$limits->travelling_cost);
+    }
+
+    if(Input::get('fuel_cost')>$limits->fuel_cost){
+
+        return redirect()->back()->with('failure','Sorry the Fuel cost exceeds the limit of '.$limits->fuel_cost);
+    }
+
+    if(Input::get('postage_cost')>$limits->postage_cost){
+
+        return redirect()->back()->with('failure','Sorry the Postage cost exceeds the limit of '.$limits->postage_cost);
+    }
+
+    if(Input::get('fax_cost')>$limits->fax_cost){
+
+        return redirect()->back()->with('failure','Sorry the Fax cost exceeds the limit of '.$limits->fax_cost);
+    }
+
+ $balance = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->first();
+
+
+            if(Input::get('month')=='January' || Input::get('month')=='February' || Input::get('month')=='March'){
     DB::table('budget')->insert( array(
 
-            'user_id' => Auth::u65tfser()->id,
+            'user_id' => Auth::user()->id,
             'month' => Input::get('month'),
             'market_cost' => Input::get('market_cost'),
             'travelling_cost' => Input::get('travelling_cost'),
@@ -85,11 +126,73 @@ class HomeController extends Controller
             'business_status' => 'Not settled',
             'description' => Input::get('output_description'),
             'expected_premium' => Input::get('expected_premium'),
-            'carry_over_balance' => $balance,
+            'carry_over_balance' => $balance->resultant_balance,
             'first_approval' => Input::get('reviewer'),
             'created_at'     =>   Carbon::now(),
-            'updated_at'     =>  Carbon::now()
-        ));
+            'updated_at'     =>  Carbon::now(),
+            'quarter' => '1'   ));
+            }
+            elseif(Input::get('month')=='April' || Input::get('month')=='May' || Input::get('month')=='June'){
+    DB::table('budget')->insert( array(
+
+            'user_id' => Auth::user()->id,
+            'month' => Input::get('month'),
+            'market_cost' => Input::get('market_cost'),
+            'travelling_cost' => Input::get('travelling_cost'),
+            'fuel_cost' => Input::get('fuel_cost'),
+            'postage_cost' => Input::get('postage_cost'),
+            'fax_cost' => Input::get('fax_cost'),
+            'budget_status' => 'created',
+            'business_status' => 'Not settled',
+            'description' => Input::get('output_description'),
+            'expected_premium' => Input::get('expected_premium'),
+            'carry_over_balance' => $balance->resultant_balance,
+            'first_approval' => Input::get('reviewer'),
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),
+            'quarter' => '2'   ));
+            }
+            elseif(Input::get('month')=='July' || Input::get('month')=='August' || Input::get('month')=='September'){
+    DB::table('budget')->insert( array(
+
+            'user_id' => Auth::user()->id,
+            'month' => Input::get('month'),
+            'market_cost' => Input::get('market_cost'),
+            'travelling_cost' => Input::get('travelling_cost'),
+            'fuel_cost' => Input::get('fuel_cost'),
+            'postage_cost' => Input::get('postage_cost'),
+            'fax_cost' => Input::get('fax_cost'),
+            'budget_status' => 'created',
+            'business_status' => 'Not settled',
+            'description' => Input::get('output_description'),
+            'expected_premium' => Input::get('expected_premium'),
+            'carry_over_balance' => $balance->resultant_balance,
+            'first_approval' => Input::get('reviewer'),
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),            
+            'quarter' => '3'   ));
+            }
+            else{
+    DB::table('budget')->insert( array(
+
+            'user_id' => Auth::user()->id,
+            'month' => Input::get('month'),
+            'market_cost' => Input::get('market_cost'),
+            'travelling_cost' => Input::get('travelling_cost'),
+            'fuel_cost' => Input::get('fuel_cost'),
+            'postage_cost' => Input::get('postage_cost'),
+            'fax_cost' => Input::get('fax_cost'),
+            'budget_status' => 'created',
+            'business_status' => 'Not settled',
+            'description' => Input::get('output_description'),
+            'expected_premium' => Input::get('expected_premium'),
+            'carry_over_balance' => $balance->resultant_balance,
+            'first_approval' => Input::get('reviewer'),
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),
+            'quarter' => '4'   ));
+            }
+      
 
     $created_id = DB::getPdo()->lastInsertId();
 
@@ -407,6 +510,35 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         $approve->save();
 
        return redirect('/requests')->with('success','Congratulations, Business Settled');
+
+    }
+
+
+    public function forward_post($id)
+    {
+        $remarks = RemarksModel::where('budget_id', $id)->first();
+        $remarks->reason = Input::get('reason');
+        $remarks->push_forward_date = Input::get('extended_date');
+        $remarks->save();
+
+
+        $budget = BudgetModel::where('budget_id', $id)->first();
+        $budget->business_status = 'Pushed Forward';
+        if($budget->quarter == '1'){
+        $budget->quarter = '2';
+        }
+        elseif($budget->quarter == '2'){
+        $budget->quarter = '3';
+        }
+        elseif($budget->quarter == '3'){
+        $budget->quarter = '4';
+        }
+        else{
+        $budget->quarter = '1';
+        }
+        $budget->save();
+
+       return redirect('/requests')->with('success','Business Output Date has been extended to the next Quarter');
 
     }
 
