@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 @extends('layouts.admin')
 
 @section('content')
 
 <a href="/admin/register-user" class="btn btn-success">Create User</a>
+=======
+@extends('layouts.app')
+
+@section('content')
+
+<a href="/register" class="btn btn-success">Create User</a>
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
 <h1>Users</h1>
 
 <table class="table">

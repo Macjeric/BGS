@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
     @extends('layouts.admin')
+=======
+    @extends('layouts.app')
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
 
 @section('content')
 

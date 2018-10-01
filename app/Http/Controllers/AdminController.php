@@ -71,10 +71,21 @@ class AdminController extends Controller
 
 
 
+<<<<<<< HEAD
        public function add_user(Request $request)
     
+=======
+    public function index()
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
     {
+        //
+        $admins = admin::all();
+        return view('admin.index')->with('admins', $admins);
+        
+        
+    }
 
+<<<<<<< HEAD
 
  	DB::table('users')->insert(
         array(
@@ -88,11 +99,67 @@ class AdminController extends Controller
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now()
         ));
+=======
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //To show the required create page when its clicked
+        return view('admin.create');
         
-        return redirect('/')->with('success', 'User has been Registered Successfully!');
-
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
+        
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+        //Validate goods_received forms
+        $this->validate($request, [
+            'id' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'title' => 'required',
+            'branch_id_' => 'required',
+            'password' => 'required',
+            ]);
+
+
+        //creation
+        return admin::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'title' => $data['title'],
+            'branch_id_' => $data['branch_id_'],
+
+            ]);
+
+         return redirect('/admin')->with('success', 'User have been Registered');
+            
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+<<<<<<< HEAD
     public function edit($id)
     {
         //
@@ -101,12 +168,56 @@ class AdminController extends Controller
     }
 
   	public function create_user()
+=======
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
     {
-    	$list_branches = DB::table('branches')->get();
-
-    	return view('auth.register',compact('list_branches'));
+        //
+        $admin = admin::find($id);
+        return view('admin.edit')->with('admin', $admin);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //public function update(Request $request, $id)
+        {
+        //Validate goods_received forms
+        $this->validate($request, [
+            'id' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'title' => 'required',
+            'branch_id_' => 'required',
+            'password' => 'required',
+            ]);
+
+            // creation
+            $admin = admin::find($id);
+            $admin->name = $request->input('name');
+            $admin->email = $request->input('email');
+            $admin->password = $request->input('password');
+            $admin->title = $request->input('title');
+            $admin->branch_id_ = $request->input('branch_id_');
+
+
+            $admin->save();
+        }
+    }
+
+<<<<<<< HEAD
 public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -131,6 +242,14 @@ public function update(Request $request, $id)
         
     }
 
+=======
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
     public function destroy($id)
     {
         //
@@ -138,5 +257,9 @@ public function update(Request $request, $id)
         $admin->delete();
         return redirect('/admin')->with('success', 'User Removed');
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
 }
+
