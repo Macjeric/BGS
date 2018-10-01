@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script> -->
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -12,6 +13,8 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/extra.css" rel="stylesheet">
+
 
     <!-- Scripts -->
     <script>
@@ -51,14 +54,16 @@
                                     <!-- Authentication Links -->
                                     @if (Auth::guest())
                                         <li><a href="{{ url('/login') }}">Login</a></li>
-                                    @else
 
-                                          <li><a href="/home">Dashboard</a></li>
-                                          <li><a href="/add">Add Request</a></li>
-                                          <li><a href="/requests">My Requests</a></li>
-                                          <li><a href="/report">Reports</a></li>
+                                        @else
+
+                                          <li><a href="/home" style="color: rgb(89,130,213)">Dashboard</a></li>
+                                          <li><a href="/add" style="color: rgb(0,255,0)">Add Request</a></li>
+                                          <li><a href="/requests" style="color: rgb(0,0,255)">My Requests</a></li>
+                                          <li><a href="/report"style="color: rgb(255,0,0)" >Reports</a></li>
 
                                         <li>
+
                                             <a href="#"><i>Logged in as
                                                 {{ Auth::user()->name }}
                                             </i></a>
@@ -80,16 +85,18 @@
                                 </ul>
                             </li>
                         @endif
+                        
                     </ul>
                 </div>
             </div>
         </nav>
-
-        @yield('content')
+<div class = "container">
+        @yield('content')</div>
     </div>
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>
+
 
 
     <!-- Summation Script -->
