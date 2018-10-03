@@ -1,4 +1,4 @@
-@extends('layouts.approvers')
+@extends('layouts.admin')
 @section('content')
 
 <div class ="section">
@@ -23,8 +23,6 @@
 <div class="col">
     <div class ="box">
     <a href ="/limits"><img src="/pic/lim.png" height="300px" width="500px"></img></a></div>
-
-
     </div>
 </div>
 <div>

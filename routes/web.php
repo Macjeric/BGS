@@ -1,10 +1,6 @@
 <?php
 use App\graph;
-<<<<<<< HEAD
 use Carbon\Carbon; 
-=======
-use Carbon\Carbon;
->>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,39 +16,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dash', function () {
-//     return view('dash');
-// });
-
-Route::get('/graph', function () {
-    //Fetch amount
-    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
-            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
-            ->groupBy('month')
-            ->pluck('market_cost', 'month');
-
-    //Load the page and pass the data
-    return view('graph', compact('amount'));
-});
-
-
-Route::get('/dash', function () {
-    //Fetch amount
-    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
-            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
-            ->groupBy('month')
-            ->pluck('market_cost', 'month');
-
-    //Load the page and pass the data
-    return view('dash', compact('amount'));
-});
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/add', 'HomeController@add');
-Route::resource('admin', 'AdminController');
-Route::resource('limits', 'LimitsController');
 Route::post('/add/post', 'HomeController@add_post');
 Route::get('/requests', 'HomeController@requests');
 Route::get('/report', 'HomeController@reports');
@@ -79,7 +46,7 @@ Route::post('/create-user-post', 'AdminController@add_user');
 
 Route::get('/admin/register-user', 'AdminController@create_user');
 
-Route::resource('admin/users', 'AdminController');
+Route::resource('admin/users', 'AdminController@users');
 Route::resource('/admin/limits', 'LimitsController');
 Route::get('/admin/reports', 'AdminController@reports');
 
@@ -98,14 +65,4 @@ Route::get('/admin/reports', 'AdminController@reports');
     return view('graph', compact('amount'));
 }); */
 
-
-Route::get('/admin', function () {
-    //Fetch amount
-    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
-            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
-            ->groupBy('month')
-            ->pluck('market_cost', 'month');
-
-    //Load the page and pass the data
-    return view('dash', compact('amount'));
-});
+Route::get('/admin', 'AdminController@home');

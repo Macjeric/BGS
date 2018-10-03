@@ -55,7 +55,7 @@
                             <tr><td>Settle Business</td><td><a href="#" class="btn btn-primary btn-block disabled">Settle Business</a></td></tr>
 @endif
 
-@if( $show->business_status == 'Not settled' && $show->budget_status=='created' || $show->budget_status=='created *')
+@if( $show->budget_status=='created'|| $show_status == 0 || $show->budget_status=='created *' )
                             <tr><td>Edit:</td><td><a href="/requests/follow-up/32789{{ $show->budget_id }}43789721/edit" class="btn btn-warning btn-block">Edit Details</a></td></tr>
 @else
                             <tr><td>Edit:</td><td><a href="#" class="btn btn-warning btn-block disabled">Edit Details</a></td></tr>

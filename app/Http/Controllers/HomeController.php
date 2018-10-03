@@ -12,6 +12,7 @@ use App\Models\ApprovalsModel;
 use App\Models\BudgetModel;
 use App\Models\RemarksModel; 
 use App\Models\BalanceModel;
+use App\Models\UpdatesModel;
 use App\graph;
 use Illuminate\Support\Facades\Input;
 
@@ -77,12 +78,24 @@ class HomeController extends Controller
         return view('add', compact('branch_details','reviewer_list','balance','limits'));
     }
 
+
+
+
+
+
     public function add_post()
     {
 
     $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
 
     $limits = DB::table('limits')->first();
+
+    $budget_record = DB::table('budget')->where('user_id', Auth::user()->id )->where('business_status','=','Not settled')->orWhere('business_status','=','Pushed Forward')->count();
+
+    if($budget_record>'1'){
+
+        return redirect()->back()->with('failure','Sorry you still have an Unsettled Business. Navigate to "My Requests" to see.');
+    }
 
     if(Input::get('market_cost')>$limits->market_cost){
 
@@ -243,15 +256,24 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
 
     }
 
+
+
+
+
     public function approve($id)
     {
         $reviewer_list_1 = DB::table('users')->where( 'title','=','HFA' )->get();
-        $reviewer_list_2 = DB::table('users')->where( 'title','=','DGM' )->orWhere('title','=','PFA')->get();
-        $reviewer_list_3 = DB::table('users')->where( 'title','=','GM' )->orWhere('title','=','HFA')->get();
-        $reviewer_list_4 = DB::table('users')->where( 'title','=','DGM' )->get();
+        $reviewer_list_2 = DB::table('users')->where( 'title','=','DGM' )->get();
+        $reviewer_list_3 = DB::table('users')->where( 'title','=','GM' )->get();
+        //$reviewer_list_4 = DB::table('users')->where( 'title','=','DGM' )->get();gm
+
+        //$reviewer_list_1r = DB::table('users')->where( 'title','=','HFA' )->get();pfa
+        $reviewer_list_2r = DB::table('users')->where('title','=','PFA')->get();
+        $reviewer_list_3r = DB::table('users')->where('title','=','HFA')->get();
+        $reviewer_list_4r = DB::table('users')->where( 'title','=','DGM' )->orWhere('title','=','HFA')->orWhere('title','=','PFA')->get();
 
         $show_budget_details = DB::table('budget')->where('budget_id', $id )->first();
-        $show_reviewer = DB::table('approvals')->join('users', 'users.id', '=', 'approvals.approving_user_id')->where('budget_id', $id )->select('*')->get();
+        $show_reviewer = DB::table('approvals')->join('users', 'users.id', '=', 'approvals.approving_user_id')->where('budget_id', $id )->select('name', 'approvals.updated_at', 'approvals.status', 'comment', 'users.id', 'approvals.approving_user_id')->get();
 
 
         $name = DB::table('users')->where('id', $show_budget_details->user_id )->first();
@@ -260,14 +282,30 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         $total = DB::table('balance')->where('budget_id', $id )->first();
 
 
-
-        return view('approve', compact('show_budget_details','show_reviewer','show_status','total','name','branch','reviewer_list_1', 'reviewer_list_2', 'reviewer_list_3','reviewer_list_4'));
+        return view('approve', compact('show_budget_details','show_reviewer','show_status','total','name','branch','reviewer_list_1', 'reviewer_list_2', 'reviewer_list_3','reviewer_list_2r','reviewer_list_3r','reviewer_list_4r'));
     }
+
+
+
+
+
+
+
+
+
 
     public function approve_post($id)
     {
+    
+    $count_record = DB::table('approvals')->where('budget_id', $id )->where('approving_user_id', Auth::user()->id )->where('status','=','Approved')->count();
 
-        if(Auth::user()->title == 'PFA'){
+     if($count_record>'1'){
+
+        return redirect()->back()->with('failure','Sorry! You already approved this budget');
+        
+        }
+
+        elseif(Auth::user()->title == 'PFA' && $count_record == '0'){
         $approve = ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Approved';
@@ -275,9 +313,17 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         $approve->forward_to = Input::get('reviewer');
         $approve->save();
         return redirect('approved')->with('success','Budget approved Successfully!');
+
+     /*   DB::table('approve_record')->insert( array(
+            'user_id' => Auth::user()->id,
+            'budget_id' => $id,
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now()
+        ));  */
+
         }
 
-        elseif(Auth::user()->title == 'HFA'){
+        elseif(Auth::user()->title == 'HFA' && $count_record == '0'){
         $approve = ApprovalsModel::where('category','=','Recommended for budget by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Approved';
@@ -287,7 +333,7 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         return redirect('approved')->with('success','Budget approved Successfully!');
         }
 
-        elseif(Auth::user()->title == 'DGM'){
+        elseif(Auth::user()->title == 'DGM' && $count_record == '0'){
         $approve = ApprovalsModel::where('category','=','Recommended for activity by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Approved';
@@ -297,7 +343,7 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         return redirect('approved')->with('success','Budget approved Successfully!');
         }
 
-        elseif(Auth::user()->title == 'GM'){
+        elseif(Auth::user()->title == 'GM' && $count_record == '0'){
         
         $approve = ApprovalsModel::where('category','=','Approved by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
@@ -306,15 +352,14 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         $approve->forward_to = Input::get('reviewer');
         $approve->save();
 
-        $approve = BudgetModel::where('budget_id', $id)->first();
-        $approve->budget_status = 'Approved';
-        $approve->save();
-
+        $budget = BudgetModel::where('budget_id', $id)->first();
+        $budget->budget_status = 'Approved';
+        $budget->save();
 
         return redirect('approved')->with('success','Budget approved Successfully!');
 
-
         }
+
     else{
 
         return redirect('approved')->with('failure','Sorry You Are Not Authorized to Perform This Operation');
@@ -322,44 +367,110 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
 
     }
 
-/*
+
+
+
+
+
+
+
+
+
+
     public function reject_post($id)
     {
         if(Auth::user()->title == 'PFA'){
-        $approve = Approvals::where('category','=','Reviewed by:')->find($id);
+        $approve = ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Rejected';
         $approve->comment = Input::get('comment');
+        $approve->forward_to = NULL;
         $approve->save();
-        return redirect('approved')->with('success','Budget Rejected Successfully!');
+
+        return redirect('approved')->with('failure','Budget Rejected Successfully!');
         }
 
         elseif(Auth::user()->title == 'HFA'){
-        $approve = Approvals::where('category','=','Recommended for budget by:')->find($id);
+
+        $approve = ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = '0';
+        $approve->status = 'Rejected';
+        $approve->comment = 'Pending';
+        $approve->forward_to = NULL;
+        $approve->save();
+
+        $approve = ApprovalsModel::where('category','=','Recommended for budget by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Rejected';
         $approve->comment = Input::get('comment');
+        $approve->forward_to = NULL;
         $approve->save();
+
         return redirect('approved')->with('success','Budget Rejected Successfully!');
         }
 
+
+
         elseif(Auth::user()->title == 'DGM'){
-        $approve = Approvals::where('category','=','Recommended for activity by:')->find($id);
+
+        $approve = ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = '0';
+        $approve->status = 'Rejected';
+        $approve->comment = 'Pending';
+        $approve->forward_to = NULL;
+        $approve->save();
+
+        $approve = ApprovalsModel::where('category','=','Recommended for budget by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = '0';
+        $approve->status = 'Rejected';
+        $approve->comment = 'Pending';
+        $approve->forward_to = NULL;
+        $approve->save();
+
+        $approve = ApprovalsModel::where('category','=','Recommended for activity by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Rejected';
         $approve->comment = Input::get('comment');
+        $approve->forward_to = Input::get('reviewer');
         $approve->save();
         return redirect('approved')->with('success','Budget Rejected Successfully!');
         }
 
         elseif(Auth::user()->title == 'GM'){
-        $approve = Approvals::where('category','=','Approved by:')->find($id);
+
+        $approve = ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = '0';
+        $approve->status = 'Rejected';
+        $approve->comment = 'Pending';
+        $approve->forward_to = NULL;
+        $approve->save();
+
+        $approve = ApprovalsModel::where('category','=','Recommended for budget by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = '0';
+        $approve->status = 'Rejected';
+        $approve->comment = 'Pending';
+        $approve->forward_to = NULL;
+        $approve->save();
+
+        $approve = ApprovalsModel::where('category','=','Recommended for activity by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = '0';
+        $approve->status = 'Rejected';
+        $approve->comment = 'Pending';
+        $approve->forward_to = NULL;
+        $approve->save();
+
+        $approve = ApprovalsModel::where('category','=','Approved by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Rejected';
         $approve->comment = Input::get('comment');
+        $approve->forward_to = NULL;
         $approve->save();
-        return redirect('approved')->with('success','Budget Rejected Successfully!');
+
+        return redirect('approved')->with('failure','Budget Rejected Successfully!');
         }
+
+
+
     else{
 
         return redirect('approved')->with('failure','Sorry You Are Not Authorized to Perform This Operation');
@@ -367,50 +478,84 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
 
     }
 
+
+
+
+
+
+
     public function return_post($id)
+    
     {
-        if(Auth::user()->title == 'PFA'){
-        $approve = Approvals::where('category','=','Reviewed by:')->find($id);
+
+    $count_record = DB::table('approvals')->where('budget_id', $id )->where('approving_user_id', Auth::user()->id )->where('status','=','Returned')->count();
+
+     if($count_record>'1'){
+
+        return redirect()->back()->with('failure','Sorry! You already approved this budget');
+        
+        }
+
+        elseif(Auth::user()->title == 'PFA' && $count_record == '0'){
+
+        $approve =ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Returned';
         $approve->comment = Input::get('comment');
+        $approve->forward_to = Input::get('reviewer');
+        $approve->save();
+        return redirect('approved')->with('success','Budget Returned Successfully!');
+
+        }
+
+
+        elseif(Auth::user()->title == 'HFA' && $count_record == '0'){
+
+        $approve =ApprovalsModel::where('category','=','Recommended for budget by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = Auth::user()->id ;
+        $approve->status = 'Returned' ;
+        $approve->comment = Input::get('comment') ;
+        $approve->forward_to = Input::get('reviewer');
+        $approve->save();
+        return redirect('approved')->with('success','Budget Returned Successfully!');
+
+        }
+
+
+        elseif(Auth::user()->title == 'DGM' && $count_record == '0'){
+
+        $approve =ApprovalsModel::where('category','=','Recommended for activity by:')->where('budget_id',$id)->first();
+        $approve->approving_user_id = Auth::user()->id;
+        $approve->status = 'Returned';
+        $approve->comment = Input::get('comment');
+        $approve->forward_to = Input::get('reviewer');
         $approve->save();
         return redirect('approved')->with('success','Budget Returned Successfully!');
         }
 
-        elseif(Auth::user()->title == 'HFA'){
-        $approve = Approvals::where('category','=','Recommended for budget by:')->find($id);
+       elseif(Auth::user()->title == 'GM' && $count_record == '0'){
+        $approve =ApprovalsModel::where('category','=','Approved by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Returned';
         $approve->comment = Input::get('comment');
+        $approve->forward_to = Input::get('reviewer');
         $approve->save();
         return redirect('approved')->with('success','Budget Returned Successfully!');
-        }
 
-        elseif(Auth::user()->title == 'DGM'){
-        $approve = Approvals::where('category','=','Recommended for activity by:')->find($id);
-        $approve->approving_user_id = Auth::user()->id;
-        $approve->status = 'Returned';
-        $approve->comment = Input::get('comment');
-        $approve->save();
-        return redirect('approved')->with('success','Budget Returned Successfully!');
-        }
+       }
 
-        elseif(Auth::user()->title == 'GM'){
-        $approve = Approvals::where('category','=','Approved by:')->find($id);
-        $approve->approving_user_id = Auth::user()->id;
-        $approve->status = 'Returned';
-        $approve->comment = Input::get('comment');
-        $approve->save();
-        return redirect('approved')->with('success','Budget Returned Successfully!');
-        }
     else{
 
         return redirect('approved')->with('failure','Sorry You Are Not Authorized to Perform This Operation');
     }
 
     }  
-*/
+
+
+
+
+
+
     public function requests()
     {
         $list_requests = DB::table('budget')->where('user_id', Auth::user()->id)->get();
@@ -418,10 +563,17 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         return view('requests', compact('list_requests'));
     }
 
+
+
+
+
     public function reports()
     {
         return view('report');
     }
+
+
+
 
     public function follow($id)
     {
@@ -441,13 +593,21 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         return view('follow', compact('show_budget_details','show_reviewer','show_status','total','branch','budget_id','remarks_details','remarks_details_count'));
     }
 
+
+
+
+
+
     public function edit_budget($id)
     {
         $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
         $budget_details = DB::table('budget')->where('budget_id', $id )->first();
-
         return view('edit_budget', compact('budget_details','branch_details'));
     }
+
+
+
+
 
     public function remarks_post(Request $request, $id)
     {
@@ -487,13 +647,20 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
         return redirect()->back()->with('success','Congratulations! Remark Submitted Successfully!');
     }
 
+
+
+
     public function settle($id)
     {
         $balance = DB::table('balance')->where('budget_id', $id )->first();
-        $reviewer_list = DB::table('users')->where( 'title','=','HFA' )->orWhere('title','=','PFA')->get();   
-        
+        $reviewer_list = DB::table('users')->where( 'title','=','HFA' )->orWhere('title','=','PFA')->get();    
         return view('settle', compact('balance','reviewer_list'));
     }
+
+
+
+
+
 
     public function settle_post($id)
     {
@@ -512,6 +679,10 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
        return redirect('/requests')->with('success','Congratulations, Business Settled');
 
     }
+
+
+
+
 
 
     public function forward_post($id)
@@ -541,6 +712,11 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
        return redirect('/requests')->with('success','Business Output Date has been extended to the next Quarter');
 
     }
+
+
+
+
+
 
     public function update_budget($id)
     {

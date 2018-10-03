@@ -58,9 +58,10 @@
                                         @else
 
                                           <li><a href="/admin">Dashboard</a></li>
-                                          <li><a href="/admin/budget-requests">Budget requests</a></li>
+                                          <li><a href="/admin/budget-requests">Budget Requests</a></li>
                                           <li><a href="/admin/users">Users</a></li>
                                           <li><a href="/admin/limits">Amount Limits</a></li>
+                                          <li><a href="/admin/limits">Branches</a></li>
                                           <li><a href="/admin/reports" >Reports</a></li>
 
                                         <li>

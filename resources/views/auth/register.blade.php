@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
+            <div class="panel panel-primary">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/create-user-post') }}">
@@ -58,14 +58,12 @@
                             <div class="col-md-6">
                                 <select id="title" class="form-control" name="title" value="{{ old('title') }}" required autofocus>
                                    <option value="">Choose Tittle: </option>
-                                   <option value="Insuarance Officer">Insuarance Officer</option>
                                    <option value="HFA">HFA</option>
                                    <option value="PFA">PFA</option>
                                    <option value="DGM">DGM</option>
                                    <option value="GM">General Manager</option>
                                    <option value="System Admin">System Admin</option>
                                    <option value="Staff">Staff</option>
-                                   <option value="Claim Officer">Claim Officer</option>
                                  </select>
 
                                 @if ($errors->has('title'))
@@ -121,7 +119,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary btn-block">
                                     Register
                                 </button>
                             </div>

@@ -57,9 +57,9 @@
 
                                         @else
 
-                                          <li><a href="/home" style="color: rgb(89,130,213)">Dashboard</a></li>
-                                          <li><a href="/add" style="color: rgb(0,255,0)">Budget Requests</a></li>
-                                          <li><a href="/report"style="color: rgb(255,0,0)" >Reports</a></li>
+                                          <li><a href="/approver">Dashboard</a></li>
+                                          <li><a href="/approver/requests">Budget Requests</a></li>
+                                          <li><a href="/approver/report">Reports</a></li>
 
                                         <li>
 
