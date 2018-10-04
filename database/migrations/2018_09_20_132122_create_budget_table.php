@@ -17,6 +17,7 @@ class CreateBudgetTable extends Migration
             $table->increments('budget_id')->unsigned()->index();
             $table->integer('user_id')->unsigned()->index()->references('id')->on('users')->onUpdate('cascade')->onDelete('restrict');
             $table->string('month');
+            $table->string('place');
             $table->integer('quarter');
             $table->integer('market_cost');
             $table->integer('travelling_cost');
@@ -27,7 +28,7 @@ class CreateBudgetTable extends Migration
             $table->string('business_status');
             $table->string('description');
             $table->integer('expected_premium');
-            $table->integer('carry_over_balance');
+            $table->integer('carry_over_balance')->default('0');
             $table->string('first_approval');
             $table->timestamps();
             });

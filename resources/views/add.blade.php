@@ -25,7 +25,7 @@
                              @endif
 
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Add Request:</b></div>
+                <div class="panel-heading" style="background:url(img/bg2.jpg); background-size:cover; color: white;"><b>Add Request:</b></div>
                 <div class="panel-body">
                     <p align="right"><b>Account Balance:</b> {{ $balance->resultant_balance }} TZS</p>
 
@@ -83,6 +83,21 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group{{ $errors->has('place') ? ' has-error' : '' }}">
+                            <label for="place" class="col-md-4 control-label">Place</label>
+
+                            <div class="col-md-6">
+                                <input id="place" type="text" name="place" class="form-control">
+
+                                @if ($errors->has('place'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('place') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
 <div id="container">
 
                         <div class="form-group{{ $errors->has('market_cost') ? ' has-error' : '' }}">
@@ -221,7 +236,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary btn-block">
+                                <button type="submit" class="btn btn-success btn-block">
                                     Request
                                 </button>
                             </div>

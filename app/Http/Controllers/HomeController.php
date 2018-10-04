@@ -122,7 +122,9 @@ class HomeController extends Controller
         return redirect()->back()->with('failure','Sorry the Fax cost exceeds the limit of '.$limits->fax_cost);
     }
 
- $balance = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->first();
+   $balance = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->orderBy('budget.updated_at', 'desc')->first();
+
+  $balance_count = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('balance_id')->orderBy('budget.updated_at', 'desc')->groupBy('balance.budget_id')->count();
 
 
             if(Input::get('month')=='January' || Input::get('month')=='February' || Input::get('month')=='March'){
@@ -130,6 +132,7 @@ class HomeController extends Controller
 
             'user_id' => Auth::user()->id,
             'month' => Input::get('month'),
+            'place' => Input::get('place'),
             'market_cost' => Input::get('market_cost'),
             'travelling_cost' => Input::get('travelling_cost'),
             'fuel_cost' => Input::get('fuel_cost'),
@@ -150,6 +153,7 @@ class HomeController extends Controller
 
             'user_id' => Auth::user()->id,
             'month' => Input::get('month'),
+            'place' => Input::get('place'),
             'market_cost' => Input::get('market_cost'),
             'travelling_cost' => Input::get('travelling_cost'),
             'fuel_cost' => Input::get('fuel_cost'),
@@ -170,6 +174,7 @@ class HomeController extends Controller
 
             'user_id' => Auth::user()->id,
             'month' => Input::get('month'),
+            'place' => Input::get('place'),
             'market_cost' => Input::get('market_cost'),
             'travelling_cost' => Input::get('travelling_cost'),
             'fuel_cost' => Input::get('fuel_cost'),
@@ -190,6 +195,7 @@ class HomeController extends Controller
 
             'user_id' => Auth::user()->id,
             'month' => Input::get('month'),
+            'place' => Input::get('place'),
             'market_cost' => Input::get('market_cost'),
             'travelling_cost' => Input::get('travelling_cost'),
             'fuel_cost' => Input::get('fuel_cost'),
@@ -241,7 +247,9 @@ class HomeController extends Controller
             'updated_at'     =>  NULL,
         ));
 
-$total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost');
+//use update method
+if($balance_count>1){
+$total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost')-$balance->resultant;
 
     DB::table('balance')->insert( array(
 
@@ -250,6 +258,18 @@ $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fu
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now(),
         ));
+}
+else{
+$total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost');
+
+    DB::table('balance')->insert( array(
+
+            'budget_id' => $created_id,
+            'total_cost' => $total_cst,
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),
+        ));
+}
 
  
     return redirect('/requests')->with('success', 'Budget Submitted Successfully!');

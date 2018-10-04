@@ -23,7 +23,7 @@
         ]); ?>
     </script>
 </head>
-<body>
+<body style="background:url(img/bg.jpg); background-size:cover;">
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -38,7 +38,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="#">
                         ACTIVITY PLANNER
                     </a>
                 </div>
