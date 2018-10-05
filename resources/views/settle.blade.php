@@ -10,7 +10,7 @@
 
                 <div class="panel-body">
                 
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('requests/follow-up/id/settle/post') }}">
+                <form class="form-horizontal" role="form" method="POST" action="/requests/follow-up/32789{{ $balance->budget_id }}43789721/settle/post">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('final_remarks') ? ' has-error' : '' }}">
@@ -33,8 +33,9 @@
                             <div class="col-md-10">
                                  <select name="reviewer" class="form-control" value="{{ old('reviewer') }}" id="reviewer" required autofocus>
                                    <option value="">Choose Reviewer: </option>
-                                   <option value="pf.crdb.com">MR. ALLY - PFA</option>
-                                   <option value="hfa.crdb.com">MR. ABDALLAH - HFA</option>
+                                    @foreach($reviewer_list as $reviewer)
+                                    <option value="{{ $reviewer->email }}">{{ $reviewer->name }} - {{ $reviewer->title }}</option>
+                                    @endforeach
                                  </select>
                                 
                                 @if ($errors->has('reviewer'))
@@ -72,7 +73,8 @@
                                       <h4 class="modal-title">Push Forward Action Date</h4>
                                     </div>
                                     <div class="modal-body">
-                                                       <form class="form-horizontal" role="form" method="POST" action="{{ url('requests/follow-up/id/settle/post') }}">
+
+                        <form class="form-horizontal" role="form" method="POST" action="/requests/follow-up/32789{{ $balance->budget_id }}43789721/push/post">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('reason') ? ' has-error' : '' }}">

@@ -23,7 +23,7 @@
         ]); ?>
     </script>
 </head>
-<body style="background:url(img/bg.jpg); background-size:cover;">
+<body>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -38,7 +38,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="{{ url('/') }}">
                         ACTIVITY PLANNER
                     </a>
                 </div>
@@ -57,10 +57,10 @@
 
                                         @else
 
-                                          <li><a href="/home")">Dashboard</a></li>
-                                          <li><a href="/add" >Add Request</a></li>
-                                          <li><a href="/requests">My Requests</a></li>
-                                          <li><a href="/report" >Reports</a></li>
+                                          <li><a href="/approver">Dashboard</a></li>
+                                          <li><a href="/approver/requests">Budget Requests</a></li>
+                                          <li><a href="/approver/report">Reports</a></li>
+
                                         <li>
 
                                             <a href="#"><i>Logged in as

@@ -22,6 +22,7 @@
                                 {{ session('warning') }}
                              </div>
                              @endif
+                             
             <div class="panel panel-default">
                 <div class="panel-heading">My Requests</div>
 
@@ -31,6 +32,7 @@
                         <thead>
                           <tr>
                             <th>Date of Request:</th>
+                            <th>Quarter:</th>
                             <th>Month</th>
                             <th>Business Status</th>
                             <th>Budget Status</th>
@@ -42,6 +44,7 @@
                           @foreach($list_requests as $list)
                           <tr>
                             <td>{{ $list->created_at }}</td>
+                            <td>{{ $list->quarter }}</td>
                             <td>{{ $list->month }}</td>
                             
                             @if($list->business_status == 'Settled')

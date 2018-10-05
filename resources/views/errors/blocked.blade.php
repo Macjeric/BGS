@@ -40,7 +40,8 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Oops! Something went wrong.</div>
+                <div class="title">Account Locked</div>
+                <p>Please contact admin</p>
             </div>
         </div>
     </body>

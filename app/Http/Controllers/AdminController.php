@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 use DB;
-//use Auth;
+//use Auth; 
 use Hash;
 use App\User;
 use Illuminate\Support\Facades\Input;
 use App\admin;
+use App\graph;
 //use Illuminate\Support\Facades\Log;
 
 
@@ -21,40 +22,42 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
-   
-      
 
-    public function index()
+    public function users()
     {
-        //
         $admins = admin::all();
-        return view('admin.index')->with('admins', $admins);
-        
-        
+        return view('admin.users')->with('admins', $admins);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function home(){
+
+    //Fetch amount
+    $amount = graph::where('created_at', '>=', Carbon::now()->firstOfYear())
+            ->selectRaw('MONTH as month, sum(market_cost) as market_cost')
+            ->groupBy('month')
+            ->pluck('market_cost', 'month');
+
+    //Load the page and pass the data
+    return view('admin.dash', compact('amount'));
+
+    }
+
+    public function create_user(){
+
+        $list_branches =  DB::table('branches')->get();
+        
+         return view('auth.register', compact('list_branches'));
+    }
+
+     public function create()
     {
         //To show the required create page when its clicked
         return view('admin.create');
-        
-        
-    }
+    }     
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
         //Validate goods_received forms
         $this->validate($request, [
             'id' => 'required',
@@ -80,42 +83,15 @@ class AdminController extends Controller
             
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+
         $admin = admin::find($id);
         return view('admin.edit')->with('admin', $admin);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //public function update(Request $request, $id)
-        {
-        //Validate goods_received forms
         $this->validate($request, [
             'id' => 'required',
             'name' => 'required',
@@ -132,24 +108,15 @@ class AdminController extends Controller
             $admin->password = $request->input('password');
             $admin->title = $request->input('title');
             $admin->branch_id_ = $request->input('branch_id_');
-
-
-            $admin->save();
-        }
+            $admin->save();   
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
         $admin = Admin::find($id);
         $admin->delete();
         return redirect('/admin')->with('success', 'User Removed');
     }
+
 }
 

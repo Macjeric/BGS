@@ -11,9 +11,10 @@ class BudgetModel extends Model
   protected $primaryKey = 'budget_id';
 
   protected $fillable =[
-  		//'budget_id',
     	'user_id',
-        'month', 
+        'month',
+        'place', 
+        'quarter', 
         'market_cost', 
         'travelling_cost', 
         'fuel_cost', 

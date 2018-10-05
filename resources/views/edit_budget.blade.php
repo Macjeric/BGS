@@ -1,27 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Update Request:</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/add/post') }}">
-                        {{ csrf_field() }}
+                    
 
+                    <form class="form-horizontal" role="form" id="inst_form" method="POST" action="/requests/follow-up/32789{{ $budget_details->budget_id }}43789721/edit/post">
+                        {{ csrf_field() }}
+                        
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name:</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" required autofocus disabled>
+                                <input id="name" type="text" class="form-control" name="name" value="{{ Auth::user()->name }} - {{ Auth::user()->title }}" required autofocus disabled>
 
                                 @if ($errors->has('name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Location:</label>
+
+                            <div class="col-md-6">
+                                @foreach($branch_details as $branch_details)
+                                <p>{{ $branch_details->b_name }} -- {{ $branch_details->b_region}} -- {{ $branch_details->b_zone }}</p>
+                                @endforeach
                             </div>
                         </div>
 
@@ -39,7 +51,7 @@
                                    <option value="June">June</option>
                                    <option value="July">July</option>
                                    <option value="August">August</option>
-                                   <option value="Septemebr">September</option>
+                                   <option value="September">September</option>
                                    <option value="October">October</option>
                                    <option value="November">November</option>
                                    <option value="December">December</option>
@@ -52,13 +64,13 @@
                                 @endif
                             </div>
                         </div>
-
+<div id="container">
 
                         <div class="form-group{{ $errors->has('market_cost') ? ' has-error' : '' }}">
                             <label for="market_cost" class="col-md-4 control-label">Market Cost</label>
 
                             <div class="col-md-6">
-                                <input id="market_cost" type="text" class="form-control" name="market_cost" value="0" pattern="[0-9]{*}" required>
+                                <input id="market_cost" type="text" class="inst_amount form-control" name="market_cost" pattern="[0-9]{*}" value="{{ $budget_details->market_cost }}" required>
 
                                 @if ($errors->has('market_cost'))
                                     <span class="help-block">
@@ -72,7 +84,7 @@
                             <label for="travelling_cost" class="col-md-4 control-label">Travelling Local Cost</label>
 
                             <div class="col-md-6">
-                                <input id="travelling_cost" type="text" class="form-control" name="travelling_cost" value="0" pattern="[0-9]{*}" required>
+                                <input id="travelling_cost" type="text" class="inst_amount form-control" name="travelling_cost" pattern="[0-9]{*}" value="{{ $budget_details->travelling_cost }}" required>
 
                                 @if ($errors->has('travelling_cost'))
                                     <span class="help-block">
@@ -86,7 +98,7 @@
                             <label for="fuel_cost" class="col-md-4 control-label">M/V Fuel & Lubricants Cost</label>
 
                             <div class="col-md-6">
-                                <input id="fuel_cost" type="text" class="form-control" name="fuel_cost" value="0" pattern="[0-9]{*}" required>
+                                <input id="fuel_cost" type="text" class="inst_amount form-control" name="fuel_cost" pattern="[0-9]{*}" value="{{ $budget_details->fuel_cost }}" required>
 
                                 @if ($errors->has('fuel_cost'))
                                     <span class="help-block">
@@ -100,7 +112,7 @@
                             <label for="postage_cost" class="col-md-4 control-label">Postage Cost</label>
 
                             <div class="col-md-6">
-                                <input id="postage_cost" type="text" class="form-control" name="postage_cost" value="0" pattern="[0-9]{*}" required>
+                                <input id="postage_cost" type="text" class="inst_amount form-control" name="postage_cost" pattern="[0-9]{*}" value="{{ $budget_details->postage_cost }}" required>
 
                                 @if ($errors->has('postage_cost'))
                                     <span class="help-block">
@@ -114,7 +126,7 @@
                             <label for="fax_cost" class="col-md-4 control-label">Fax Cost</label>
 
                             <div class="col-md-6">
-                                <input id="fax_cost" type="text" class="form-control" name="fax_cost" value="0" pattern="[0-9]{*}" required>
+                                <input id="fax_cost" type="text" class="inst_amount form-control" name="fax_cost" pattern="[0-9]{*}" value="{{ $budget_details->fax_cost }}" required>
 
                                 @if ($errors->has('fax_cost'))
                                     <span class="help-block">
@@ -128,7 +140,7 @@
                             <label for="total_cost" class="col-md-4 control-label">Total Cost</label>
 
                             <div class="col-md-6">
-                                <input id="total_cost" type="text" class="form-control" name="total_cost" value="0" pattern="[0-9]{*}" required disabled="">
+                        <input type="text" class="form-control" id="total_amount" name="total_cost" required disabled>
 
                                 @if ($errors->has('total_cost'))
                                     <span class="help-block">
@@ -137,13 +149,13 @@
                                 @endif
                             </div>
                         </div>
-
+</div>
 
                         <div class="form-group{{ $errors->has('output_description') ? ' has-error' : '' }}">
                             <label for="output_description" class="col-md-4 control-label">Expected output Description:</label>
 
                             <div class="col-md-6">
-                                <textarea id="output_description" class="form-control" name="output_description" required></textarea>
+                                <textarea id="output_description" class="form-control" name="output_description" required>{{ $budget_details->description }}</textarea>
 
                                 @if ($errors->has('output_description'))
                                     <span class="help-block">
@@ -158,7 +170,7 @@
                             <label for="expected_premium" class="col-md-4 control-label">Expected Premium:</label>
 
                             <div class="col-md-6">
-                                <input id="expected_premium" type="text" class="form-control" name="expected_premium" value="0" pattern="[0-9]{*}" required>
+                                <input id="expected_premium" type="text" class="form-control" name="expected_premium" pattern="[0-9]{*}" value="{{ $budget_details->expected_premium }}" required>
 
                                 @if ($errors->has('expected_premium'))
                                     <span class="help-block">
@@ -168,25 +180,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('reviewer') ? ' has-error' : '' }}">
-                            <label for="reviewer" class="col-md-4 control-label">Choose Reviewer:</label>
-
-                            <div class="col-md-6">
-                                 <select name="reviewer" class="form-control" value="{{ old('reviewer') }}" id="reviewer" required autofocus>
-                                   <option value="">Choose Reviewer: </option>
-                                   <option value="pf.crdb.com">PFA</option>
-                                   <option value="hfa.crdb.com">HFA</option>
-                                 </select>
-                                
-                                @if ($errors->has('reviewer'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('reviewer') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary btn-block">
@@ -194,10 +187,43 @@
                                 </button>
                             </div>
                         </div>
+     
                     </form>
-                </div>
+                
             </div>
+        </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    function sumIt() {
+  var total = 0, val;
+  $('.inst_amount').each(function() {
+    val = $(this).val();
+    val = isNaN(val) || $.trim(val) === "" ? 0 : parseFloat(val);
+    total += val;
+  });
+  $('#total_price').html(Math.round(total));
+  $('#total_amount').val(Math.round(total));
+}
+
+$(function() {
+
+  // $('.datepicker').datepicker(); // not needed for this test
+
+
+  $("#add").on("click", function() {
+    $("#container input").last()
+      .before($("<input />").prop("class","inst_amount").val(0))
+      .before("<br/>");
+    sumIt();  
+  });
+
+
+  $(document).on('input', '.inst_amount', sumIt);
+  sumIt() // run when loading
+});
+</script>
+
 @endsection
