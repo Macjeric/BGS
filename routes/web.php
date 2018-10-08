@@ -41,14 +41,40 @@ Route::get('/approved/',function () {
     return view('approved');
 });
 
+
+//Approver
+Route::get('/approver', 'ApproversController@home');
+Route::get('/approver/requests', 'ApproversController@budget_requests');
+Route::get('/approver/settle', 'ApproversController@settle');
+
+Route::get('/approver/remarks/approve/83921283{id}83930293', 'ApproversController@settle_post');
+
+Route::get('approver/requests/follow-up/32789{id}43789721/edit', 'ApproversController@edit_budget');
+Route::post('approver/32789{id}43789721/edit/post', 'ApproversController@edit_budget_post');
+Route::get('/approver/view/32789{id}43789721', 'ApproversController@view');
+Route::get('approver/reports', 'ApproversController@report');
+
+
+
 //Admin
-Route::post('/create-user-post', 'AdminController@add_user');
+Route::get('/admin', 'AdminController@home');
+//Route::resource('/create-user-post', 'AdminController@store');
 
 Route::get('/admin/register-user', 'AdminController@create_user');
-
 Route::resource('admin/users', 'AdminController@users');
-Route::resource('/admin/limits', 'LimitsController');
+Route::get('/admin/limits', 'LimitsController@index');
 Route::get('/admin/reports', 'AdminController@reports');
+Route::get('/admin/reports', 'AdminController@reports');
+Route::get('/admin/upload', 'AdminController@upload');
+Route::get('/admin/requests', 'AdminController@requests');
+Route::get('/admin/branches', 'AdminController@branches');
+Route::get('/admin/limit/{id}/edit', 'LimitsController@edit');
+Route::post('/admin/limit/{id}/edit/post', 'LimitsController@update');
+Route::get('/admin/limit/{id}/reset', 'LimitsController@reset');
+
+
+Route::get('/view-file-738283873764671737{id}93624163535261', 'HomeController@download_file');
+
 
 
 
@@ -65,4 +91,3 @@ Route::get('/admin/reports', 'AdminController@reports');
     return view('graph', compact('amount'));
 }); */
 
-Route::get('/admin', 'AdminController@home');

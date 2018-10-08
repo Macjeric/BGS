@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\limit;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
+use DB;
+use Auth;
+use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
@@ -27,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin/users';
 
     /**
      * Create a new controller instance.
@@ -36,8 +41,9 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
     }
+
 
     /**
      * Get a validator for an incoming registration request.
@@ -48,11 +54,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'name' => 'required',
+            /*'username' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'title' => 'required',
-            'branch_name_' => 'required',
-            'password' => 'required|min:6|confirmed',
+            'branch_name_' => 'required', */
+            'password' => 'required|min:6|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,10}$/',
         ]);
     }
 
@@ -64,13 +71,48 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $CreatedUser = User::create([
             'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'title' => $data['title'],
-            'branch_name_' => $data['branch_name'],
+            'branch_id_' => $data['branch_name'],
             'status' => 'created',
             'password' => bcrypt($data['password']),
         ]);
+
+    $created_id = DB::getPdo()->lastInsertId();
+
+   // $limits_count = DB::table('limits')->where('user_id', $created_id )->count();
+    $limits_admin = DB::table('limits')->join('users', 'users.id', '=' , 'limits.user_id')->where('users.title', '=', 'System Admin' )->select('*')->first();
+
+   
+
+        return limit::create([
+            'user_id' => $CreatedUser->id,
+            'market_cost' => $limits_admin->market_cost,
+            'travelling_cost'     =>  $limits_admin->travelling_cost,
+            'fuel_cost'     => $limits_admin->fuel_cost,
+            'postage_cost'     =>  $limits_admin->postage_cost,
+            'fax_cost'     =>  $limits_admin->fax_cost,
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),
+        ]);
+
+/*
+    return DB::table('limits')->insert( array(
+
+            'user_id' => Auth::user()->id,
+            'market_cost' => $limits_admin->market_cost,
+            'travelling_cost'     =>  $limits_admin->travelling_cost,
+            'fuel_cost'     => $limits_admin->fuel_cost,
+            'postage_cost'     =>  $limits_admin->postage_cost,
+            'fax_cost'     =>  $limits_admin->fax_cost,
+            'created_at'     =>   Carbon::now(),
+            'updated_at'     =>  Carbon::now(),
+        )); */
+
+
+
     }
 }

@@ -56,11 +56,11 @@ class AdminController extends Controller
     }     
 
 
-    public function store(Request $request)
+    public function store(Request $request, $data)
     {
         //Validate goods_received forms
         $this->validate($request, [
-            'id' => 'required',
+            'username' => 'required',
             'name' => 'required',
             'email' => 'required',
             'title' => 'required',
@@ -72,6 +72,7 @@ class AdminController extends Controller
         //creation
         return admin::create([
             'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'title' => $data['title'],
@@ -79,7 +80,7 @@ class AdminController extends Controller
 
             ]);
 
-         return redirect('/admin')->with('success', 'User have been Registered');
+         return redirect('/admin/users')->with('success', 'User have been Registered');
             
     }
 
@@ -116,6 +117,24 @@ class AdminController extends Controller
         $admin = Admin::find($id);
         $admin->delete();
         return redirect('/admin')->with('success', 'User Removed');
+    }
+
+    public function branches()
+    {
+        $branches = DB::table('branches')->get();
+        return view('admin.branches', compact('branches'));
+    }
+
+    public function requests()
+    {
+        $requests = DB::table('budget')->get();
+       
+        return view('admin.requests', compact('requests'));
+    }
+
+    public function reports()
+    {
+        return view('admin.reports');
     }
 
 }

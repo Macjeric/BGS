@@ -4,10 +4,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Register</div>
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background:url(/img/bg2.jpg); background-size:cover; color: white;">Register</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/create-user-post') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -119,9 +119,15 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary btn-block">
+                                <button type="submit" class="btn btn-success btn-block">
                                     Register
-                                </button>
+                                </button><br><br>
+                                <h5><b><u>Password Rules:</u></b></h5>
+                                <span>Your password has to be at least 6 characters long.
+                                    <br>Must contain at least one lower case letter
+                                    <br>One upper case letter
+                                    <br>One Number.
+                                    <br>And one of these special characters ~!@#$%^&*()_+</span>
                             </div>
                         </div>
                     </form>

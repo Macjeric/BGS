@@ -36,6 +36,7 @@
 @foreach($show_budget_details as $show)                          
                             <tr><td>Name:</td><td>{{ Auth::user()->name }}</td></tr>
                             <tr><td>Title</td><td>{{ Auth::user()->title }} - {{ $branch->b_name }} -- {{ $branch->b_region }} -- {{ $branch->b_zone }}</td></tr>
+                            <tr><td>Place of Visit:</td><td>{{ $show->place }}</td></tr>
                             <tr><td>Month</td><td>{{ $show->month }}</td></tr>
                             <tr><td>Market Cost</td><td>{{ $show->market_cost }}</td></tr>
                             <tr><td>Travelling Local Cost</td><td>{{ $show->travelling_cost }}</td></tr>
@@ -60,9 +61,6 @@
 @else
                             <tr><td>Edit:</td><td><a href="#" class="btn btn-warning btn-block disabled">Edit Details</a></td></tr>
 @endif
-
-
-
                       </table>  
 
 

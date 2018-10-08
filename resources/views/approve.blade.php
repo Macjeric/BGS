@@ -22,8 +22,8 @@
                              @endif
                              
                     <div class="col-md-8 col-md-offset-2">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">Approve User's Budget Request</div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"  style="background:url(/img/bg2.jpg); background-size:cover; color: white;">Approve User's Budget Request</div>
 
                             <div class="panel-body">
                               <p><b>Name: </b> {{ $name->name }} - {{ $name->title }}</p>
@@ -34,7 +34,7 @@
                               <h4>Approvals:</h4>
 
                               <div class="row">
-                              <div class="col-lg-4">
+                      <!--        <div class="col-lg-4">
                               <table class="table table-striped">
                                     <thead>
                                       <tr>
@@ -48,12 +48,13 @@
                                        <tr><td>Approved by:</td></tr>
                                    </tbody>
                                </table>
-                           </div>
+                           </div> -->
 
-                        <div class="col-lg-8">
+                        <div class="col-lg-12">
                                   <table class="table table-striped">
                                     <thead>
                                       <tr>
+                                        <th>Category:</th>
                                         <th>Name:</th>
                                         <th>Comment:</th>
                                         <th>Status:</th>
@@ -63,7 +64,7 @@
                                     <tbody>
                                       @foreach($show_reviewer as $reviewer)
                                       <tr>
-                                        
+                                        <td>{{ $reviewer->category }}</td>
                                         <td>
                                         @if( $reviewer->approving_user_id == 0)
                                         Pending
@@ -142,15 +143,11 @@
                               <div class="form-group">
                                             <div class="col-md-12">
                                                 <br>
-                                                @if(Auth::user()->title ==  'GM')
-                                                <button class="btn btn-success btn-block disabled" disabled>
-                                                    Approve Request
-                                                </button>
-                                                @else
+                             
                                                 <button type="submit" class="btn btn-success btn-block">
                                                     Approve Request
                                                 </button>
-                                                @endif
+                               
 
                                                 <br>
                                                 @if(Auth::user()->title ==  'PFA')
@@ -161,6 +158,11 @@
 
                                                <br>
                                                <button data-toggle="modal" data-target="#rejectModal" class="btn btn-danger btn-block" >Reject Request</button>
+                                               <br>
+                                               <a href="/approver/requests/follow-up/32789{{ $show_budget_details->budget_id }}43789721/edit" class="btn btn-warning btn-block">Edit Details</a>
+                                              <br>
+                                              <a href="/approver/view/32789{{ $show_budget_details->budget_id }}43789721" class="btn btn-default btn-block">View</a>
+
                                             </div>
                                         </div>                              
                                  </form>
@@ -240,6 +242,7 @@
                                   </div>
                                 </div>                              
                          </form>
+
 
                                     </div>
                                 </div>

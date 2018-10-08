@@ -14,7 +14,7 @@ class CreateRemarksTable extends Migration
     public function up()
     {
             Schema::create('remarks', function (Blueprint $table) {
-            $table->increments('id')->unsigned()->index(); 
+            $table->increments('remark_id')->unsigned()->index(); 
             $table->integer('budget_id')->unsigned()->index()->references('budget_id')->on('budget')->onUpdate('cascade')->onDelete('restrict');
             $table->integer('actual_cost')->default('0');
             $table->date('expected_action_date');
@@ -23,7 +23,7 @@ class CreateRemarksTable extends Migration
             $table->string('final_remarks')->nullable();
             $table->string('reason')->nullable();
             $table->string('reviewer')->nullable();
-            $table->string('status')->default('Remark Submited');
+            $table->string('remark_status')->default('Remark Submited');
             $table->timestamps();
             });
 
