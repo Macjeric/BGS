@@ -8,7 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Input;
 use DB;
 use Auth;
-
+use Carbon\Carbon;
 
 class LimitsController extends Controller
 {
@@ -141,6 +141,8 @@ class LimitsController extends Controller
     DB::table('limits')->update(['postage_cost' => $limit->postage_cost ]);
 
     DB::table('limits')->update(['fax_cost' => $limit->fax_cost ]);
+
+    DB::table('limits')->update(['updated_at' => Carbon::now() ]);
 
 
     return redirect()->back()->with('success', 'Amount Limits Reset Successfully');

@@ -17,6 +17,11 @@ use App\Models\UpdatesModel;
 use App\graph;
 use Illuminate\Support\Facades\Input;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Response;
+
+
 class HomeController extends Controller
 {
     /**
@@ -84,7 +89,7 @@ class HomeController extends Controller
 
 
 
-    public function add_post()
+    public function add_post(Request $request)
     {
 
   
@@ -96,7 +101,7 @@ class HomeController extends Controller
 
     if($budget_record>'1'){
 
-        return redirect()->back()->with('failure','Sorry you still have an Unsettled Business. Navigate to "My Requests" to see.');
+        return redirect()->back()->withInput($request->all)->withErrors($limits)->with('failure','Sorry you still have an Unsettled Business. Navigate to "My Requests" to see.');
     }
 
     if(Input::get('market_cost')>$limits->market_cost){
@@ -130,6 +135,17 @@ class HomeController extends Controller
 
 
             if(Input::get('month')=='January' || Input::get('month')=='February' || Input::get('month')=='March'){
+
+//store file
+
+$file = $request['file_uploaded'];
+$mime = $file->getClientOriginalExtension();
+$now = Carbon::now();
+$filename_renamed = Auth::user()->username.'_'.Input::get('month').'_'.$now->month.'_'.$now->year.'_.'.$mime;
+$file->storeAs('\files',$filename_renamed);
+
+
+
     DB::table('budget')->insert( array(
 
             'user_id' => Auth::user()->id,
@@ -146,11 +162,23 @@ class HomeController extends Controller
             'expected_premium' => Input::get('expected_premium'),
             'carry_over_balance' => '0',
             'first_approval' => Input::get('reviewer'),
+            'file_name' => $filename_renamed,
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now(),
             'quarter' => '1'   ));
+
+
             }
             elseif(Input::get('month')=='April' || Input::get('month')=='May' || Input::get('month')=='June'){
+
+$file = $request['file_uploaded'];
+$mime = $file->getClientOriginalExtension();
+$now = Carbon::now();
+$filename_renamed = Auth::user()->username.'_'.Input::get('month').'_'.$now->month.'_'.$now->year.'_.'.$mime;
+$file->storeAs('\files',$filename_renamed);
+
+
+
     DB::table('budget')->insert( array(
 
             'user_id' => Auth::user()->id,
@@ -172,6 +200,15 @@ class HomeController extends Controller
             'quarter' => '2'   ));
             }
             elseif(Input::get('month')=='July' || Input::get('month')=='August' || Input::get('month')=='September'){
+
+$file = $request['file_uploaded'];
+$mime = $file->getClientOriginalExtension();
+$now = Carbon::now();
+$filename_renamed = Auth::user()->username.'_'.Input::get('month').'_'.$now->month.'_'.$now->year.'_.'.$mime;
+$file->storeAs('\files',$filename_renamed);
+
+
+
     DB::table('budget')->insert( array(
 
             'user_id' => Auth::user()->id,
@@ -193,6 +230,15 @@ class HomeController extends Controller
             'quarter' => '3'   ));
             }
             else{
+
+$file = $request['file_uploaded'];
+$mime = $file->getClientOriginalExtension();
+$now = Carbon::now();
+$filename_renamed = Auth::user()->username.'_'.Input::get('month').'_'.$now->month.'_'.$now->year.'_.'.$mime;
+$file->storeAs('\files',$filename_renamed);
+
+
+
     DB::table('budget')->insert( array(
 
             'user_id' => Auth::user()->id,
@@ -788,6 +834,25 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
     }
 
 
+
+    public function download_file($id)
+    {
+
+        $fyl = new BudgetModel;
+
+        $file_ob = $fyl->find($id);
+    
+        $filename= $file_ob->file_name;
+
+        $path = public_path().'\files\\'.$filename;
+/*
+        $file = Storage::disk('local')->get('/files/'.$filename);
+      
+        return Response::download($file); */ 
+
+        return response()->download($path);        
+
+    }
 
 }
 

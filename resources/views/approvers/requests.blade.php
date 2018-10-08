@@ -71,7 +71,7 @@ Edited
                             </td>
                             <td><a href="/approve/329382329383293823983238{{ $requests->budget_id }}874393239328923982378923782739237" class="btn btn-success">Approve</a></td>
                             @endif
-                            <td><a href="/approver/openfile/18347588484{{ $requests->budget_id }}47383484939" class="btn btn-default">View File</a> </td>
+                            <td> <a href="/view-file-738283873764671737{{ $list->budget_id }}93624163535261" class="btn btn-warning">Get File</a></td>
                           </tr>
                           @endforeach
    

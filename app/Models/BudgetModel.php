@@ -26,6 +26,7 @@ class BudgetModel extends Model
         'expected_premium',
         'carry_over_balance',
         'first_approval',
+        'file_name',
 
     ];
 

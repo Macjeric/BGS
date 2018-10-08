@@ -29,7 +29,7 @@
                 <div class="panel-body">
                     <p align="right"><b>Account Balance:</b> {{ $balance->resultant_balance }} TZS</p>
 
-                    <form class="form-horizontal" role="form" id="inst_form" method="POST" action="{{ url('/add/post') }}">
+                    <form class="form-horizontal" role="form" id="inst_form" method="POST" action="{{ url('/add/post') }}"  enctype="multipart/form-data">
                         {{ csrf_field() }}
                         
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">

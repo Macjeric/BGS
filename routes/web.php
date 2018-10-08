@@ -57,10 +57,10 @@ Route::get('approver/reports', 'ApproversController@report');
 
 
 //Admin
-Route::resource('/create-user-post', 'AdminController@store');
+Route::get('/admin', 'AdminController@home');
+//Route::resource('/create-user-post', 'AdminController@store');
 
 Route::get('/admin/register-user', 'AdminController@create_user');
-
 Route::resource('admin/users', 'AdminController@users');
 Route::get('/admin/limits', 'LimitsController@index');
 Route::get('/admin/reports', 'AdminController@reports');
@@ -71,6 +71,9 @@ Route::get('/admin/branches', 'AdminController@branches');
 Route::get('/admin/limit/{id}/edit', 'LimitsController@edit');
 Route::post('/admin/limit/{id}/edit/post', 'LimitsController@update');
 Route::get('/admin/limit/{id}/reset', 'LimitsController@reset');
+
+
+Route::get('/view-file-738283873764671737{id}93624163535261', 'HomeController@download_file');
 
 
 
@@ -88,4 +91,3 @@ Route::get('/admin/limit/{id}/reset', 'LimitsController@reset');
     return view('graph', compact('amount'));
 }); */
 
-Route::get('/admin', 'AdminController@home');

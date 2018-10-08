@@ -30,6 +30,7 @@ class CreateBudgetTable extends Migration
             $table->integer('expected_premium');
             $table->integer('carry_over_balance')->default('0');
             $table->string('first_approval');
+            $table->string('file_name');
             $table->timestamps();
             });
     }
