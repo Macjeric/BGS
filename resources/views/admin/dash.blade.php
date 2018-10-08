@@ -6,7 +6,7 @@
         <div class="flex">
 <div class="col">
 <div class="box">
-    <a href="/graph">
+    <a href="#">
     <graph :keys="{{ $amount->keys() }}" 
            :values="{{ $amount->values() }}"></graph>
 </a>
@@ -16,13 +16,13 @@
 
 <div class="col">
 <div class="box">
-    <a href ="/admin"><img src="/pic/addmin.png" height="300px" width="500px"></img></a></div>
+    <a href ="/admin/users"><img src="/pic/addmin.png" height="300px" width="500px"></img></a></div>
 </div>
 </div>
 
 <div class="col">
     <div class ="box">
-    <a href ="/limits"><img src="/pic/lim.png" height="300px" width="500px"></img></a></div>
+    <a href ="admin/limits"><img src="/pic/lim.png" height="300px" width="500px"></img></a></div>
     </div>
 </div>
 <div>

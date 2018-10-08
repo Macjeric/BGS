@@ -8,6 +8,8 @@ class RemarksModel extends Model
 {
     protected $table = 'remarks';
 
+     protected $primaryKey = 'remark_id';
+
   protected $fillable =[
     	'budget_id',
         'actual_cost', 
@@ -17,7 +19,7 @@ class RemarksModel extends Model
         'final_remarks',
         'reason',
         'reviewer',
-        'status',
+        'remark_status',
     ];
 
 }

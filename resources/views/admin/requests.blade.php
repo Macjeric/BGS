@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -37,30 +37,30 @@
                             <th>Business Status</th>
                             <th>Budget Status</th>
                             <th>Total Cost</th>
-                            <th>Open</th>
+                            <th>View</th>
                           </tr>
                         </thead>
                         <tbody>
-                          @foreach($list_requests as $list)
+                          @foreach($requests as $requests)
                           <tr>
-                            <td>{{ $list->created_at }}</td>
-                            <td>{{ $list->quarter }}</td>
-                            <td>{{ $list->month }}</td>
+                            <td>{{ $requests->created_at }}</td>
+                            <td>{{ $requests->quarter }}</td>
+                            <td>{{ $requests->month }}</td>
                             
-                            @if($list->business_status == 'Settled')
-                            <td class="success">{{ $list->business_status }}</td>
+                            @if($requests->business_status == 'Settled')
+                            <td class="success">{{ $requests->business_status }}</td>
                             @else
-                            <td class="danger">{{ $list->business_status }}</td>
+                            <td class="danger">{{ $requests->business_status }}</td>
                             @endif
 
-                            @if($list->budget_status == 'Approved')
-                            <td class="success">{{ $list->budget_status }}</td>
+                            @if($requests->budget_status == 'Approved')
+                            <td class="success">{{ $requests->budget_status }}</td>
                             @else
-                            <td class="danger">{{ $list->budget_status }}</td>
+                            <td class="danger">{{ $requests->budget_status }}</td>
                             @endif
 
-                            <td>{{ $list->market_cost+$list->travelling_cost+$list->fuel_cost+$list->postage_cost+$list->fax_cost }}</td>
-                            <td> <a href="/requests/follow-up/32789{{ $list->budget_id }}43789721" class="btn btn-success">Follow-up</a></td>
+                            <td>{{ $requests->market_cost+$requests->travelling_cost+$requests->fuel_cost+$requests->postage_cost+$requests->fax_cost }}</td>
+                            <td><a href="#" class="btn btn-default">View</a></td>
                           </tr>
                           @endforeach
    

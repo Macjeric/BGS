@@ -8,6 +8,7 @@ use Auth;
 use Hash;
 use Carbon\Carbon;
 use App\User;
+use App\limit;
 use App\Models\ApprovalsModel;
 use App\Models\BudgetModel;
 use App\Models\RemarksModel; 
@@ -59,7 +60,7 @@ class HomeController extends Controller
 
     public function add()
     {
-        $limits = DB::table('limits')->first();
+        $limits = DB::table('limits')->where('user_id', Auth::user()->id )->first();
 
         $balance1 = DB::table('balance')->join('budget', 'balance.budget_id', '=' , 'budget.budget_id')->where('budget.user_id', Auth::user()->id)->select('*')->count();
 
@@ -86,9 +87,10 @@ class HomeController extends Controller
     public function add_post()
     {
 
+  
     $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
 
-    $limits = DB::table('limits')->first();
+    $limits = DB::table('limits')->where('user_id', Auth::user()->id )->first();
 
     $budget_record = DB::table('budget')->where('user_id', Auth::user()->id )->where('business_status','=','Not settled')->orWhere('business_status','=','Pushed Forward')->count();
 
@@ -142,7 +144,7 @@ class HomeController extends Controller
             'business_status' => 'Not settled',
             'description' => Input::get('output_description'),
             'expected_premium' => Input::get('expected_premium'),
-            'carry_over_balance' => $balance->resultant_balance,
+            'carry_over_balance' => '0',
             'first_approval' => Input::get('reviewer'),
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now(),
@@ -163,7 +165,7 @@ class HomeController extends Controller
             'business_status' => 'Not settled',
             'description' => Input::get('output_description'),
             'expected_premium' => Input::get('expected_premium'),
-            'carry_over_balance' => $balance->resultant_balance,
+            'carry_over_balance' => '0',
             'first_approval' => Input::get('reviewer'),
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now(),
@@ -184,7 +186,7 @@ class HomeController extends Controller
             'business_status' => 'Not settled',
             'description' => Input::get('output_description'),
             'expected_premium' => Input::get('expected_premium'),
-            'carry_over_balance' => $balance->resultant_balance,
+            'carry_over_balance' => '0',
             'first_approval' => Input::get('reviewer'),
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now(),            
@@ -205,7 +207,7 @@ class HomeController extends Controller
             'business_status' => 'Not settled',
             'description' => Input::get('output_description'),
             'expected_premium' => Input::get('expected_premium'),
-            'carry_over_balance' => $balance->resultant_balance,
+            'carry_over_balance' => '0',
             'first_approval' => Input::get('reviewer'),
             'created_at'     =>   Carbon::now(),
             'updated_at'     =>  Carbon::now(),
@@ -247,7 +249,7 @@ class HomeController extends Controller
             'updated_at'     =>  NULL,
         ));
 
-//use update method
+//use update method 
 if($balance_count>1){
 $total =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get('fuel_cost')+Input::get('postage_cost')+Input::get('fax_cost')-$balance->resultant;
 
@@ -271,6 +273,16 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
         ));
 }
 
+
+        $limits = limit::where('user_id', Auth::user()->id )->first();
+        $limits->market_cost = $limits->market_cost-Input::get('market_cost');
+        $limits->travelling_cost = $limits->travelling_cost-Input::get('travelling_cost');
+        $limits->fuel_cost = $limits->fuel_cost-Input::get('fuel_cost');
+        $limits->fax_cost = $limits->fax_cost-Input::get('fax_cost');
+        $limits->postage_cost = $limits->postage_cost-Input::get('postage_cost');
+        $limits->save();
+
+
  
     return redirect('/requests')->with('success', 'Budget Submitted Successfully!');
 
@@ -293,7 +305,7 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
         $reviewer_list_4r = DB::table('users')->where( 'title','=','DGM' )->orWhere('title','=','HFA')->orWhere('title','=','PFA')->get();
 
         $show_budget_details = DB::table('budget')->where('budget_id', $id )->first();
-        $show_reviewer = DB::table('approvals')->join('users', 'users.id', '=', 'approvals.approving_user_id')->where('budget_id', $id )->select('name', 'approvals.updated_at', 'approvals.status', 'comment', 'users.id', 'approvals.approving_user_id')->get();
+        $show_reviewer = DB::table('approvals')->join('users', 'users.id', '=', 'approvals.approving_user_id')->where('budget_id', $id )->select('name', 'approvals.updated_at', 'approvals.status', 'comment', 'category','users.id', 'approvals.approving_user_id')->get();
 
 
         $name = DB::table('users')->where('id', $show_budget_details->user_id )->first();
@@ -326,6 +338,12 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
         }
 
         elseif(Auth::user()->title == 'PFA' && $count_record == '0'){
+       
+          $budget = BudgetModel::where('budget_id',$id)->first();
+          $budget->budget_status = 'On Approval';
+          $budget->save();
+
+
         $approve = ApprovalsModel::where('category','=','Reviewed by:')->where('budget_id',$id)->first();
         $approve->approving_user_id = Auth::user()->id;
         $approve->status = 'Approved';
@@ -623,7 +641,7 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
         $branch_details = DB::table('branches')->where('branch_id', Auth::user()->branch_id_)->get();
         $budget_details = DB::table('budget')->where('budget_id', $id )->first();
         return view('edit_budget', compact('budget_details','branch_details'));
-    }
+    } 
 
 
 
@@ -673,7 +691,7 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
     public function settle($id)
     {
         $balance = DB::table('balance')->where('budget_id', $id )->first();
-        $reviewer_list = DB::table('users')->where( 'title','=','HFA' )->orWhere('title','=','PFA')->get();    
+        $reviewer_list = DB::table('users')->where( 'title','=','DGM' )->orWhere('title','=','GM')->get();    
         return view('settle', compact('balance','reviewer_list'));
     }
 
@@ -688,15 +706,15 @@ $total_cst =  Input::get('market_cost')+Input::get('travelling_cost')+Input::get
 
         $balance = RemarksModel::where('budget_id', $id)->first();
         $balance->final_remarks = Input::get('final_remarks');
-        $balance->reviewer = Input::get('reviewer');
-        $balance->status = 'Business Settled';
+        $balance->reviewer = NULL;
+        $balance->remark_status = 'Remark Submited';
         $balance->save();
 
         $approve = BudgetModel::where('budget_id', $id)->first();
-        $approve->business_status = 'Settled';
+        $approve->business_status = 'On Settlement';
         $approve->save();
 
-       return redirect('/requests')->with('success','Congratulations, Business Settled');
+       return redirect('/requests')->with('success','Congratulations Remark Submitted. Wait for Approval.');
 
     }
 

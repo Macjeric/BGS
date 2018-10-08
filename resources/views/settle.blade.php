@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Settle business</div>
+                <div class="panel-heading" style="background:url(/img/bg2.jpg); background-size:cover; color: white;">Settle business</div>
 
                 <div class="panel-body">
                 

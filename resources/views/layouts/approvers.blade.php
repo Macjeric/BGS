@@ -23,7 +23,7 @@
         ]); ?>
     </script>
 </head>
-<body>
+<body style="background:url(/img/bg.jpg); background-size:cover;">
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -59,7 +59,8 @@
 
                                           <li><a href="/approver">Dashboard</a></li>
                                           <li><a href="/approver/requests">Budget Requests</a></li>
-                                          <li><a href="/approver/report">Reports</a></li>
+                                          <li><a href="/approver/settle">Settle Business (Remarks)</a></li>
+                                          <li><a href="/approver/reports">Reports</a></li>
 
                                         <li>
 

@@ -5,10 +5,29 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">User Management</div>
+
+            <div class="panel panel-default">
+         
+                <div class="panel-heading"  style="background:url('/img/bg2.jpg'); background-size:cover; color: white;">User Management</div>
 
                 <div class="panel-body">
+
+                              @if (session('success'))
+                             <div class="alert alert-success alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('success') }}
+                             </div>
+                             @elseif (session('failure'))
+                             <div class="alert alert-danger alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('failure') }}
+                             </div>
+                             @elseif (session('warning'))
+                             <div class="alert alert-warning alert-dismissable">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ session('warning') }}
+                             </div>
+                             @endif
 
 <a href="/admin/register-user" class="btn btn-success btn-block">Create User</a><br>
 
@@ -33,7 +52,7 @@
     <td>{!!$admin->branch_id_!!}</td>
     <td>{!!$admin->status!!}</td>
 
-    <td><a href="/admin/{{$admin->id}}/edit" class="btn btn-primary btn-block">Edit</a></td>
+    <td><a href="/admin/{{$admin->id}}/edit" class="btn btn-success btn-block">Edit</a></td>
 
     </tr>
     @endforeach

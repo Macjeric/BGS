@@ -1,15 +1,11 @@
-<<<<<<< HEAD
+
 @extends('layouts.admin')
-=======
-@extends('layouts.app')
->>>>>>> bae2e97a9c399661428bb8abf247ceb15427e0a5
-
 @section('content')
-    <h2>Create Limits</h2>
-<a href="/limits" class="btn btn-default">Back</a><br></br>
+    <h2>Update Limits</h2>
+<a href="/admin/limits" class="btn btn-default">Back</a><br></br>
 
 
-{!! Form::open(['action' => 'LimitsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+{!! Form::open(['action' => 'LimitsController@update', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
     
 <div class="form-group">
             {{Form::label('limits_id', 'ID')}}

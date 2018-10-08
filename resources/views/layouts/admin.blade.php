@@ -23,7 +23,7 @@
         ]); ?>
     </script>
 </head>
-<body>
+<body  style="background:url(/img/bg.jpg); background-size:cover;">
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -58,10 +58,10 @@
                                         @else
 
                                           <li><a href="/admin">Dashboard</a></li>
-                                          <li><a href="/admin/budget-requests">Budget Requests</a></li>
+                                          <li><a href="/admin/requests">Budget Requests</a></li>
                                           <li><a href="/admin/users">Users</a></li>
                                           <li><a href="/admin/limits">Amount Limits</a></li>
-                                          <li><a href="/admin/limits">Branches</a></li>
+                                          <li><a href="/admin/branches">Branches</a></li>
                                           <li><a href="/admin/reports" >Reports</a></li>
 
                                         <li>
